@@ -19,10 +19,15 @@
             <section id="page_main" class="mg-b15">
                 <article>
                   <h4 class="mp0 mg-b10 color-333">
-                    <span>오늘의 사또</span>
-                    <button class="w60 pd10 border0 outline0 mg-r5 radius50 font12 border-eee bg-fff mg-l5" @click="initLotto();">
+                    <!-- <span>오늘의 사또</span> -->
+                    <span>로또 맞추기</span>
+                    <!-- <button class="w60 pd10 border0 outline0 mg-r5 radius50 font12 border-eee bg-fff mg-l5" @click="initLotto();">
                       <strong>리셋</strong>
-                    </button>
+                    </button> -->
+                    <span class="inline-block w80 bg-000-0_2 h18 mg-l10 relative" v-if="isShowNumberBoard">
+                      <span class="inline-block bg-blue absolute bottom0 left0 h100p bg-fff" :style="{width: 100 - ((100 / 120) * timer) + '%'}"></span>
+                      <span class="w100p inline-block txt-c relative color-000">{{120 - timer}}</span>
+                    </span>
                   </h4>
                   <div class="pd15 bg-fff-0_6 radius10 txt-c" style="box-shadow:0 1px 1px #bbb;">
                     <p class="mg0 font14 none">
@@ -88,6 +93,7 @@
                       <button class="w70 pd10 border0 outline0 mg-r5 radius50 font12 border-eee" style="background:#fd0;" @click="sumitTheNumber();"><strong>제출</strong></button>
                       <!-- <button class="w70 pd10 border0 outline0 mg-r5 radius50 font12 border-eee bg-fff" @click="showNumberBoard();"><strong>취소</strong></button> -->
                       <button class="w70 pd10 border0 outline0 mg-r5 radius50 font12 border-eee bg-fff" @click="initNum();"><strong>초기화</strong></button>
+                      <button class="w60 pd10 border0 outline0 radius50 font12 border-eee bg-fff" @click="initLotto();"><strong>리셋</strong></button>
                     </div>
                   </div>
                 </article>
@@ -135,28 +141,50 @@ export default {
         col: {}
       },
 
-      difficulty: 0 //난이도
+      difficulty: 0, //난이도
+
+      setInterval: '',
+      timer: 0
     }
   },
 
   methods: {
     initLotto() {
-      const t = this;
-      t.btnType = 'check';
-      t.pickedBalls = [];
-      t.btnState = {};
-      document.querySelectorAll('[data-symbol]').forEach((currentValue) => {
-        currentValue.classList.add('none');
-      })
-      t.getRandomNum();
-    },
-
-    initNum() {
-      const t = this;
-      if(confirm('초기화 하시겠습니까?')){
+      if(confirm('로또 숫자를 초기화 하시겠습니까?')){
+        const t = this;
         t.btnType = 'check';
         t.pickedBalls = [];
         t.btnState = {};
+  
+        document.querySelectorAll('[data-symbol]').forEach((currentValue) => {
+          currentValue.classList.add('none');
+        })
+  
+        clearInterval(t.setInterval);
+        t.timer = 0;
+  
+        t.getRandomNum();
+  
+        t.setInterval = setInterval(() => {
+          t.timer++;
+  
+          if(t.timer == 120){
+            alert('문제가 초기화 됩니다.');
+            t.timer = 0;
+            clearInterval(t.setInterval);
+          }
+        }, 1000);
+      }
+    },
+
+    initNum() {
+      if(confirm('숫자판을 초기화 하시겠습니까?')){
+        const t = this;
+        t.btnType = 'check';
+        t.pickedBalls = [];
+        t.btnState = {};
+        t.isTestBtn = false;
+
         document.querySelectorAll('[data-symbol]').forEach((currentValue) => {
           currentValue.classList.add('none');
         })
@@ -209,6 +237,20 @@ export default {
         const t = this;
         t.isShowNumberBoard = !t.isShowNumberBoard;
         t.pickedBalls = [];
+
+        
+
+        t.setInterval = setInterval(() => {
+          t.timer++;
+
+          if(t.timer == 120){
+            alert('문제가 초기화 됩니다.');
+            t.timer = 0;
+            clearInterval(t.setInterval);
+          }
+        }, 1000);
+
+
     },
 
     getBaseHint() {
@@ -310,13 +352,14 @@ export default {
 
     pickTheBall(target) {
       const t = this;
+
       let parent = target.target.closest('span');
       let btnNum = parent.querySelector('span').innerText;
       let tmpArr = t.pickedBalls;
 
-      parent.querySelectorAll('[data-symbol]').forEach((currentValue) => {
-        currentValue.classList.add('none');
-      })
+      // parent.querySelectorAll('[data-symbol]').forEach((currentValue) => {
+      //   currentValue.classList.add('none');
+      // })
 
       if(t.btnState[btnNum] == (t.isTestBtn + t.btnType)){
         if(t.btnType == 'check'){
@@ -326,17 +369,20 @@ export default {
           }
         }
 
+        parent.querySelectorAll('[data-symbol]').forEach((currentValue) => {
+          currentValue.classList.add('none');
+        })
+
         parent.querySelector('[data-symbol="' + (t.isTestBtn + t.btnType) + '"]').classList.add('none');
         t.btnState[btnNum] = false;
 
       }else{
         if(t.btnType == 'check'){
-          if(tmpArr.length > 5){
+          if(tmpArr.length > 5 && String(t.btnState[btnNum]).indexOf('check') == -1){
             alert('6개를 넘을 수 없습니다.');
             return;
           }
 
-          console.log(t.btnState[btnNum]);
           if(String(t.btnState[btnNum]).indexOf('check') == -1 || !t.btnState[btnNum]){
             tmpArr.push(Number(btnNum));
           }
@@ -347,9 +393,16 @@ export default {
           }
         }
 
+        parent.querySelectorAll('[data-symbol]').forEach((currentValue) => {
+          currentValue.classList.add('none');
+        })
+
         parent.querySelector('[data-symbol="' + (t.isTestBtn + t.btnType) + '"]').classList.remove('none');
         t.btnState[btnNum] = (t.isTestBtn + t.btnType);
       }
+
+
+      // parent.querySelector('[data-symbol="' + (t.isTestBtn + t.btnType) + '"]').classList.remove('none');
 
       if(tmpArr.length > 0){
         t.pickedBalls = tmpArr.sort(function(a, b)  {

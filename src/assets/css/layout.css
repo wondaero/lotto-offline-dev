@@ -606,6 +606,7 @@ input[type="number"].no-btn::-webkit-inner-spin-button {
 .bg-000, .bg-black{background:#000;}
 .bg-000-0_5, .bg-black-0_5{background:rgba(0,0,0,.5);}
 .bg-000-0_3, .bg-black-0_3{background:rgba(0,0,0,.3);}
+.bg-000-0_2, .bg-black-0_2{background:rgba(0,0,0,.2);}
 .bg-000-0_01, .bg-black-0_01{background:rgba(0,0,0,.01);}
 .bg-snow{background:snow;}
 .bg-honeydew{background:honeyDew;}
