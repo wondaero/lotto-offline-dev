@@ -53,7 +53,7 @@
                       <h5 class="mg0 mg-b10 txt-l">
                         <span class="mg-r5">힌트</span>
                         <span @click="getDifficulty();">
-                          <span class="font18 color-000-0_3" v-for="(idx) in 3" :key="idx"
+                          <span class="font18 color-000-0_3" v-for="(idx) in 5" :key="idx"
                           :class="[starCnt >= idx ? 'color-ffd400' : '']">&#9733;</span>
                           <span v-if="isShowDifficulty">({{difficulty}})</span>
                         </span>
@@ -148,6 +148,9 @@ export default {
         row: {},
         col: {}
       },
+
+      finishedNumArr: [],
+      finishedNumCnt: 0,
 
       difficulty: 0, //난이도
       isShowDifficulty: false,
@@ -495,6 +498,8 @@ export default {
     },
 
     getQuestLevel() {
+      console.clear();
+
       const t = this;
       let copiedArr = JSON.parse(JSON.stringify(t.randomNumArr7));
 
@@ -502,13 +507,15 @@ export default {
       t.difficulty = 0;
       t.questLevel.row = {};
       t.questLevel.col = {};
+      t.finishedNumCnt = 0;
 
+      console.log(copiedArr);
+      console.log('초기', t.difficulty);
       let arr45 = [];
       for(let i = 0; i < 45; i++){
         arr45.push(i + 1);
       }
 
-      console.log(copiedArr);
 
       let removeCnt = 0;
 
@@ -532,14 +539,18 @@ export default {
         }
       }
 
+      console.log('색깔 지우기', t.difficulty);
+
       for(let i = 0; i < 9; i++){ //열지우기(abc)
         let hasNumCnt = 0;
         for(let j = 0; j < copiedArr.length; j++){
-          if(copiedArr[j] == (i + 1)){hasNumCnt++;}
-          if(copiedArr[j] == (i + 10)){hasNumCnt++;}
-          if(copiedArr[j] == (i + 19)){hasNumCnt++;}
-          if(copiedArr[j] == (i + 28)){hasNumCnt++;}
-          if(copiedArr[j] == (i + 37)){hasNumCnt++;}
+          if(copiedArr[j] == (i + 1)
+          || copiedArr[j] == (i + 10)
+          || copiedArr[j] == (i + 19)
+          || copiedArr[j] == (i + 28)
+          || copiedArr[j] == (i + 37)){
+            hasNumCnt++;
+          }
         }
         t.questLevel.col[i] = hasNumCnt;
 
@@ -551,34 +562,90 @@ export default {
               arr45.splice(elIdx, 1);
             }
           }
-        }else if(hasNumCnt > 1){
-          t.difficulty -= (hasNumCnt - 1);
         }
+        // else if(hasNumCnt > 1){
+        //   t.difficulty -= (hasNumCnt - 1);
+        // }
       }
+      console.log('열 지우기', t.difficulty);
 
-      for(let key in t.questLevel.row){ //가로세로체크(가로기준(row))
-        let colCnt = 0;
-        for(let key2 in t.questLevel.col){
-          if(t.questLevel.col[key2] == 0){
-            colCnt++;
+      let chkRemainNum = (row, col, remainedNum) => {
+        let confirmedNumArr = [];
+        for(let key in row){  //row(색깔)
+          let tmpConfirmedNumArr = [];
+          remainedNum.forEach((el) => {
+            if(Number(key) * 9 < el && el < (Number(key) * 9) + 10){
+              tmpConfirmedNumArr.push(el);
+            }
+          })
+
+          if(row[key] == tmpConfirmedNumArr.length){
+            tmpConfirmedNumArr.forEach((el) => {
+              confirmedNumArr.push(el);
+            })
           }
         }
-        if(t.questLevel.row[key] + colCnt > 8){
-          t.difficulty -= t.questLevel.row[key];
-        }
-      }
 
-      for(let key in t.questLevel.col){ //가로세로체크(세로기준(col))
-        let rowCnt = 0;
-        for(let key2 in t.questLevel.row){
-          if(t.questLevel.row[key2] == 0){
-            rowCnt++;
+        for(let key in col){  //col(abc)
+          let tmpConfirmedNumArr = [];
+          remainedNum.forEach((el) => {
+            if(el == (Number(key) + 1)
+            || el == ((Number(key) + 1) + 9)
+            || el == ((Number(key) + 1) + 18)
+            || el == ((Number(key) + 1) + 27)
+            || el == ((Number(key) + 1) + 36)){
+              tmpConfirmedNumArr.push(el);
+            }
+          })
+
+          if(col[key] == tmpConfirmedNumArr.length){
+            tmpConfirmedNumArr.forEach((el) => {
+              if(confirmedNumArr.indexOf(el) == -1){
+                confirmedNumArr.push(el);
+              }
+            })
           }
         }
-        if(t.questLevel.col[key] + rowCnt > 4){
-          t.difficulty -= t.questLevel.col[key];
-        }
+
+        return confirmedNumArr;
       }
+
+      //행과 열을 지워 확정된 숫자 추출
+      let removedNumArr = chkRemainNum(t.questLevel.row, t.questLevel.col, arr45);
+
+      removedNumArr.forEach((el) => {
+        let matchedNum = arr45.indexOf(el);
+        if(matchedNum > -1){
+          t.finishedNumCnt += arr45.splice(matchedNum, 1).length;
+        }
+      })
+
+      t.difficulty -= t.finishedNumCnt;
+      console.log('크로스 후 공짜 번호', t.difficulty);
+
+      // for(let key in t.questLevel.row){ //가로세로체크(가로기준(row))
+      //   let colCnt = 0;
+      //   for(let key2 in t.questLevel.col){
+      //     if(t.questLevel.col[key2] == 0){
+      //       colCnt++;
+      //     }
+      //   }
+      //   if(t.questLevel.row[key] + colCnt > 8){
+      //     t.difficulty -= t.questLevel.row[key];
+      //   }
+      // }
+
+      // for(let key in t.questLevel.col){ //가로세로체크(세로기준(col))
+      //   let rowCnt = 0;
+      //   for(let key2 in t.questLevel.row){
+      //     if(t.questLevel.row[key2] == 0){
+      //       rowCnt++;
+      //     }
+      //   }
+      //   if(t.questLevel.col[key] + rowCnt > 4){
+      //     t.difficulty -= t.questLevel.col[key];
+      //   }
+      // }
 
       let copiedArrWithoutBonus = [];
       let oddsCnt = 0;
@@ -597,8 +664,9 @@ export default {
         t.difficulty -= 2;
       }
 
-      let arrToStr = copiedArrWithoutBonus.join('').split('').sort().join('');
+      console.log('홀짝', t.difficulty);
 
+      let arrToStr = copiedArrWithoutBonus.join('').split('').sort().join('');
       let elObj = {};
 
       for(let i = 0; i < arrToStr.length; i++){
@@ -621,29 +689,66 @@ export default {
         }
       }
 
+      console.log('숫자조합에 없는 것들', t.difficulty);
+
+      removedNumArr = chkRemainNum(t.questLevel.row, t.questLevel.col, arr45);
+
+      removedNumArr.forEach((el) => {
+        let matchedNum = arr45.indexOf(el);
+        if(matchedNum > -1){
+          t.finishedNumCnt += arr45.splice(matchedNum, 1).length;
+        }
+      })
+
+      t.difficulty -= removedNumArr.length;
+      console.log('숫자조합 및 행열크로스', t.difficulty);
+      console.log('진심 확정 숫자들의 수', t.finishedNumCnt);
+
 
       //056789 구성
-      let num056789Arr = [];
-      let valid056789NumArr = [];
-      for(let key in elObj){
-        if(key == 0 || key > 4){
-          let tmpNum056789Arr = [];
-          for(let i = 0 ; i < arr45.length; i++){
-            if(String(arr45[i]).substr(-1) == key){
-              num056789Arr.push(arr45[i]);
-              tmpNum056789Arr.push(arr45[i]);
-            }
-          }
+      // let num056789Arr = [];
+      // let valid056789NumArr = [];
+      // console.log(arr45);
+      // for(let key in elObj){
+      //   if(key == 0 || key > 4){
+      //     let tmpNum056789Arr = [];
+      //     for(let i = 0 ; i < arr45.length; i++){
+      //       if(String(arr45[i]).substr(-1) == key){
+      //         console.log(key, ':', arr45[i]);
+      //         num056789Arr.push(arr45[i]);
+      //         tmpNum056789Arr.push(arr45[i]);
+      //       }
+      //     }
+      //     console.log(key);
+      //     console.log(elObj[key], '>=', tmpNum056789Arr.length);
+      //     if(elObj[key] >= tmpNum056789Arr.length){
+      //       t.difficulty -= tmpNum056789Arr.length;
 
-          if(elObj[key] >= tmpNum056789Arr.length){
-            t.difficulty -= num056789Arr.length;
-            valid056789NumArr.push(key);
-          }
-        }
-      }
+      //       tmpNum056789Arr.forEach((el) => {
+      //         let matchedNum = arr45.indexOf(el);
+      //         if(matchedNum > -1){
+      //           t.finishedNumCnt += arr45.splice(matchedNum, 1).length;
+      //         }
+      //       })
+
+      //       valid056789NumArr.push(key);
+      //     }
+      //   }
+      // }
+
+      // console.log('진심 확정 숫자들의 수', t.finishedNumCnt);
+      // console.log('056789 숫자 로직', t.difficulty);
+
+
+
+
+
+
+
+
 
       // num056789Arr.forEach((el) => {
-      //   let isValid = false;
+        //   let isValid = false;
       //     for(let i = 0; i < valid056789NumArr.length; i++){
       //       if(valid056789NumArr[i] == String(el).substr(-1)){
       //         isValid = true;
@@ -656,12 +761,16 @@ export default {
 
 
       //임시
-      if(t.difficulty < -12){
+      if(t.difficulty < -20){
         t.starCnt = 1;
-      }else if(t.difficulty < -9){
+      }else if(t.difficulty < -15){
         t.starCnt = 2;
-      }else{
+      }else if(t.difficulty < -10){
         t.starCnt = 3;
+      }else if(t.difficulty < -7){
+        t.starCnt = 4;
+      }else{
+        t.starCnt = 5;
       }
 
       console.log(arr45);
