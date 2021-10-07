@@ -52,8 +52,11 @@
                     <div class="mg-b10 border-ddd radius10 pd10" v-if="isShowNumberBoard">
                       <h5 class="mg0 mg-b10 txt-l">
                         <span class="mg-r5">힌트</span>
-                        <span class="font18 color-000-0_3" v-for="(idx) in 3" :key="idx"
-                        :class="[starCnt >= idx ? 'color-ffd400' : '']">&#9733;</span>
+                        <span @click="getDifficulty();">
+                          <span class="font18 color-000-0_3" v-for="(idx) in 3" :key="idx"
+                          :class="[starCnt >= idx ? 'color-ffd400' : '']">&#9733;</span>
+                          <span v-if="isShowDifficulty">({{difficulty}})</span>
+                        </span>
                       </h5>
                       <div v-html="baseHint" class="mg-b10"></div>
                       <div v-if="isShowHint" v-html="moreHint"></div>
@@ -147,6 +150,7 @@ export default {
       },
 
       difficulty: 0, //난이도
+      isShowDifficulty: false,
       starCnt: 0, 
 
       setInterval: '',
@@ -162,6 +166,8 @@ export default {
         t.btnType = 'check';
         t.pickedBalls = [];
         t.btnState = {};
+        t.isTestBtn = false;
+        
   
         document.querySelectorAll('[data-symbol]').forEach((currentValue) => {
           currentValue.classList.add('none');
@@ -176,7 +182,6 @@ export default {
         t.setInterval = setInterval(() => {
           t.timer++;
 
-
           if(t.timer > 109){
             t.timerColor = '#f55222';
           }else if(t.timer > 59){
@@ -184,8 +189,8 @@ export default {
           }
   
           if(t.timer == 120){
-            alert('문제가 초기화 됩니다.');
-            return t.initLotto(true);
+            clearInterval(t.setInterval);
+            return t.initLotto();
           }
         }, 1000);
       }
@@ -203,6 +208,11 @@ export default {
           currentValue.classList.add('none');
         })
       }
+    },
+
+    getDifficulty() {
+      const t = this;
+      t.isShowDifficulty = !t.isShowDifficulty;
     },
 
     getRandomNum() {
@@ -251,12 +261,10 @@ export default {
         const t = this;
         t.isShowNumberBoard = !t.isShowNumberBoard;
         t.pickedBalls = [];
-
+        t.isTestBtn = false;
         
-
         t.setInterval = setInterval(() => {
           t.timer++;
-
 
           if(t.timer > 109){
             t.timerColor = '#f55222';
@@ -265,9 +273,8 @@ export default {
           }
   
           if(t.timer == 120){
-            console.log(1111);
-            alert('문제가 초기화 됩니다.');
-            t.initLotto(true);
+            clearInterval(t.setInterval);
+            t.initLotto();
           }
         }, 1000);
 
@@ -349,7 +356,7 @@ export default {
       //출력
 
       t.moreHint += `<p class="mg0 mg-b10">
-      홀: ${odds}, 짝: ${tmpArr.length - odds}
+      홀: ${odds}개, 짝: ${tmpArr.length - odds}개
       </p>`;
       t.moreHint += `<p class="mg0 mg-b10">
       숫자구성: ${arrToStr}
@@ -359,6 +366,9 @@ export default {
       </p>`;
       t.moreHint += `<p class="mg0 mg-b10">
       ${changeStr}
+      </p>`;
+      t.moreHint += `<p class="mg0 mg-b10">
+      가장 큰 수 - 가장 작은 수: ${tmpArr[5] - tmpArr[0]}
       </p>`;
 
     },
@@ -422,9 +432,6 @@ export default {
         t.btnState[btnNum] = (t.isTestBtn + t.btnType);
       }
 
-
-      // parent.querySelector('[data-symbol="' + (t.isTestBtn + t.btnType) + '"]').classList.remove('none');
-
       if(tmpArr.length > 0){
         t.pickedBalls = tmpArr.sort(function(a, b)  {
           if(a > b) return 1;
@@ -433,45 +440,7 @@ export default {
         });
       }
 
-      // if(t.btnState[btnNum] == t.btnType){
-      //   if(t.btnType == 'check' || t.btnType == 'check2'){
-      //     let elemIdx = tmpArr.indexOf(Number(btnNum));
-      //     if (elemIdx > -1){
-      //       tmpArr.splice(elemIdx, 1);
-      //     }
-      //   }
-
-      //   parent.querySelector('[data-symbol="' + t.btnType + '"]').classList.add('none');
-      //   t.btnState[btnNum] = false;
-
-      // }else{
-      //   if(t.btnType == 'check' || t.btnType == 'check2'){
-      //     if(tmpArr.length > 5){
-      //       alert('6개를 넘을 수 없습니다.');
-      //       return;
-      //     }
-
-      //     tmpArr.push(Number(btnNum));
-      //   }else{
-      //     let elemIdx = tmpArr.indexOf(Number(btnNum));
-      //     if (elemIdx > -1){
-      //       tmpArr.splice(elemIdx, 1);
-      //     }
-      //   }
-
-      //   parent.querySelector('[data-symbol="' + t.btnType + '"]').classList.remove('none');
-      //   t.btnState[btnNum] = t.btnType;
-      // }
-
-      // if(tmpArr.length > 0){
-      //   t.pickedBalls = tmpArr.sort(function(a, b)  {
-      //     if(a > b) return 1;
-      //     if(a === b) return 0;
-      //     if(a < b) return -1;
-      //   });
-      // }
     },
-
 
     sumitTheNumber() {
       const t = this;
@@ -566,21 +535,11 @@ export default {
       for(let i = 0; i < 9; i++){ //열지우기(abc)
         let hasNumCnt = 0;
         for(let j = 0; j < copiedArr.length; j++){
-          if(copiedArr[j] == (i + 1)){
-            hasNumCnt++;
-          }
-          if(copiedArr[j] == (i + 10)){
-            hasNumCnt++;
-          }
-          if(copiedArr[j] == (i + 19)){
-            hasNumCnt++;
-          }
-          if(copiedArr[j] == (i + 28)){
-            hasNumCnt++;
-          }
-          if(copiedArr[j] == (i + 37)){
-            hasNumCnt++;
-          }
+          if(copiedArr[j] == (i + 1)){hasNumCnt++;}
+          if(copiedArr[j] == (i + 10)){hasNumCnt++;}
+          if(copiedArr[j] == (i + 19)){hasNumCnt++;}
+          if(copiedArr[j] == (i + 28)){hasNumCnt++;}
+          if(copiedArr[j] == (i + 37)){hasNumCnt++;}
         }
         t.questLevel.col[i] = hasNumCnt;
 
@@ -622,9 +581,22 @@ export default {
       }
 
       let copiedArrWithoutBonus = [];
+      let oddsCnt = 0;
       for(let i = 0; i < 6; i++){
         copiedArrWithoutBonus.push(copiedArr[i]);
+
+        if(copiedArr[i] % 2 == 1){
+          oddsCnt++;
+        }
       }
+
+      //홀짝으로 인한 난이도 체크
+      if(oddsCnt == 1 || oddsCnt == 5){
+        t.difficulty -= 1;
+      }else if((oddsCnt == 0 || oddsCnt == 6)){
+        t.difficulty -= 2;
+      }
+
       let arrToStr = copiedArrWithoutBonus.join('').split('').sort().join('');
 
       let elObj = {};
@@ -650,6 +622,39 @@ export default {
       }
 
 
+      //056789 구성
+      let num056789Arr = [];
+      let valid056789NumArr = [];
+      for(let key in elObj){
+        if(key == 0 || key > 4){
+          let tmpNum056789Arr = [];
+          for(let i = 0 ; i < arr45.length; i++){
+            if(String(arr45[i]).substr(-1) == key){
+              num056789Arr.push(arr45[i]);
+              tmpNum056789Arr.push(arr45[i]);
+            }
+          }
+
+          if(elObj[key] >= tmpNum056789Arr.length){
+            t.difficulty -= num056789Arr.length;
+            valid056789NumArr.push(key);
+          }
+        }
+      }
+
+      // num056789Arr.forEach((el) => {
+      //   let isValid = false;
+      //     for(let i = 0; i < valid056789NumArr.length; i++){
+      //       if(valid056789NumArr[i] == String(el).substr(-1)){
+      //         isValid = true;
+      //         break;
+      //       }
+      //     }
+
+      //     if(isValid) arr45.splice(arr45.indexOf(el), 1);
+      // })
+
+
       //임시
       if(t.difficulty < -12){
         t.starCnt = 1;
@@ -660,8 +665,8 @@ export default {
       }
 
       console.log(arr45);
+      return t.difficulty;
     }
-
   },
 
   created() {
