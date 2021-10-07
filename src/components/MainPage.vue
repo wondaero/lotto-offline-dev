@@ -24,8 +24,9 @@
                     <!-- <button class="w60 pd10 border0 outline0 mg-r5 radius50 font12 border-eee bg-fff mg-l5" @click="initLotto();">
                       <strong>리셋</strong>
                     </button> -->
-                    <span class="inline-block w80 bg-000-0_2 h18 mg-l10 relative" v-if="isShowNumberBoard">
-                      <span class="inline-block bg-blue absolute bottom0 left0 h100p bg-fff" :style="{width: 100 - ((100 / 120) * timer) + '%'}"></span>
+                    <span class="inline-block w80 h18 mg-l10 relative" style="box-shadow:inset 0 0 10px #999;" v-if="isShowNumberBoard">
+                      <span class="inline-block bg-blue absolute bottom0 left0 h100p"
+                      :style="{width: 100 - ((100 / 120) * timer) + '%', background: timerColor}"></span>
                       <span class="w100p inline-block txt-c relative color-000">{{120 - timer}}</span>
                     </span>
                   </h4>
@@ -49,7 +50,11 @@
                       <button class="w70 pd10 border0 outline0 mg-r5 radius50 font12 border-eee" style="background:#fd0;" @click="showNumberBoard();"><strong>참여</strong></button>
                     </div>
                     <div class="mg-b10 border-ddd radius10 pd10" v-if="isShowNumberBoard">
-                      <h5 class="mg0 mg-b5 txt-l">힌트({{difficulty}})</h5>
+                      <h5 class="mg0 mg-b10 txt-l">
+                        <span class="mg-r5">힌트</span>
+                        <span class="font18 color-000-0_3" v-for="(idx) in 3" :key="idx"
+                        :class="[starCnt >= idx ? 'color-ffd400' : '']">&#9733;</span>
+                      </h5>
                       <div v-html="baseHint" class="mg-b10"></div>
                       <div v-if="isShowHint" v-html="moreHint"></div>
                       <h4 class="mg0"><strong class="font10 color-f00">*모든 힌트는 보너스 숫자를 포함하지 않습니다.</strong></h4>
@@ -142,15 +147,17 @@ export default {
       },
 
       difficulty: 0, //난이도
+      starCnt: 0, 
 
       setInterval: '',
-      timer: 0
+      timer: 0,
+      timerColor: '#5af181'
     }
   },
 
   methods: {
-    initLotto() {
-      if(confirm('로또 숫자를 초기화 하시겠습니까?')){
+    initLotto(boolean) {
+      if(boolean || confirm('로또 숫자를 초기화 하시겠습니까?')){
         const t = this;
         t.btnType = 'check';
         t.pickedBalls = [];
@@ -162,16 +169,23 @@ export default {
   
         clearInterval(t.setInterval);
         t.timer = 0;
+        t.timerColor = '#5af181';
   
         t.getRandomNum();
   
         t.setInterval = setInterval(() => {
           t.timer++;
+
+
+          if(t.timer > 109){
+            t.timerColor = '#f55222';
+          }else if(t.timer > 59){
+            t.timerColor = '#f5e67e';
+          }
   
           if(t.timer == 120){
             alert('문제가 초기화 됩니다.');
-            t.timer = 0;
-            clearInterval(t.setInterval);
+            return t.initLotto(true);
           }
         }, 1000);
       }
@@ -243,10 +257,17 @@ export default {
         t.setInterval = setInterval(() => {
           t.timer++;
 
+
+          if(t.timer > 109){
+            t.timerColor = '#f55222';
+          }else if(t.timer > 59){
+            t.timerColor = '#f5e67e';
+          }
+  
           if(t.timer == 120){
+            console.log(1111);
             alert('문제가 초기화 됩니다.');
-            t.timer = 0;
-            clearInterval(t.setInterval);
+            t.initLotto(true);
           }
         }, 1000);
 
@@ -298,7 +319,7 @@ export default {
           odds++;
         }
         total += el;  //합계
-        let alphabets = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'];
+        let alphabets = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
         for(let i = 0 ; i < 9; i++){
           if(el == (1 + i) || el == (10 + i) || el == (19 + i) || el == (28 + i) || el == (37 + i)){
             colomns += alphabets[i];
@@ -499,6 +520,8 @@ export default {
             alert(t.randomNumArr7 + '\n꽝!\n나의 숫자\n' + t.pickedBalls);
             break;
         }
+
+        t.initLotto();
       }
     },
 
@@ -624,6 +647,16 @@ export default {
             }
           }
         }
+      }
+
+
+      //임시
+      if(t.difficulty < -12){
+        t.starCnt = 1;
+      }else if(t.difficulty < -9){
+        t.starCnt = 2;
+      }else{
+        t.starCnt = 3;
       }
 
       console.log(arr45);

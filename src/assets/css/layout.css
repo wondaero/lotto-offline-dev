@@ -657,10 +657,12 @@ input[type="number"].no-btn::-webkit-inner-spin-button {
 /*****color*****/
 .color-000, .color-black{color:#000;}
 .COLOR-000, .COLOR-BLACK{color:#000!important;}
+.color-000-0_3, .color-black-0_3{color:rgba(0,0,0,.3);}
 .color-333{color:#333;}
 .color-fff, .color-white{color:#fff;}
 .COLOR-FFF, .COLOR-WHITE{color:#fff!important;}
 .color-f00, .color-red{color:#f00;}
+.color-ffd400{color:#ffd400;}
 .color-blue{color:blue;}
 .color-ccc{color:#ccc;}
 .color-green{color:green;}
