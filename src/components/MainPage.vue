@@ -52,10 +52,9 @@
                     <div class="mg-b10 border-ddd radius10 pd10" v-if="isShowNumberBoard">
                       <h5 class="mg0 mg-b10 txt-l">
                         <span class="mg-r5">힌트</span>
-                        <span @click="getDifficulty();">
+                        <span>
                           <span class="font18 color-000-0_3" v-for="(idx) in 5" :key="idx"
                           :class="[starCnt >= idx ? 'color-ffd400' : '']">&#9733;</span>
-                          <span v-if="isShowDifficulty">({{difficulty}})</span>
                         </span>
                       </h5>
                       <div v-html="baseHint" class="mg-b10"></div>
@@ -81,16 +80,24 @@
                               <img :src="icon.icon_x" width="15"/>
                             </label>
                         </div>
-                        <div :class="{'mg-b3': idx != 5}" v-for="idx in 5" :key="idx">
-                          <span class="inline-block radius50p border-box font11 color-fff relative" style="width:7.8vw; height:7.8vw; max-width:43px; max-height:43px;"
-                          v-for="idx2 in 9" :key="idx2" :style="{background: ballColors[idx - 1]}" :class="{'mg-r3': idx2 != 9}">
-                            <span class="vertical-m">{{((idx - 1) * 9) + idx2}}</span>
-                            <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none radius50p" data-symbol="falsecheck" :src="icon.icon_o"/>
-                            <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none radius50p" data-symbol="falseremove" :src="icon.icon_x"/>
-                            <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none radius50p op0_3" data-symbol="truecheck" :src="icon.icon_o"/>
-                            <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none radius50p op0_5" data-symbol="trueremove" :src="icon.icon_x"/>
-                            <b class="absolute top0 left0 right0 bottom0 font25 txt-c color-000" @click.self="pickTheBall($event)"></b>
-                          </span>
+                        <div>
+                          <div class="mg-b3">
+                            <span class="inline-block radius50p border-box font11 color-fff relative bg-bbb" style="width:7.8vw; height:7.8vw; max-width:43px; max-height:43px;"
+                            v-for="idx in 9" :key="idx" :class="{'mg-r3': idx != 9}">
+                              <span class="vertical-m">{{colAlphabet[idx - 1]}}</span>
+                            </span>
+                          </div>
+                          <div :class="{'mg-b3': idx != 5}" v-for="idx in 5" :key="idx">
+                            <span class="inline-block radius50p border-box font11 color-fff relative" style="width:7.8vw; height:7.8vw; max-width:43px; max-height:43px;"
+                            v-for="idx2 in 9" :key="idx2" :style="{background: ballColors[idx - 1]}" :class="{'mg-r3': idx2 != 9}">
+                              <span class="vertical-m">{{((idx - 1) * 9) + idx2}}</span>
+                              <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none radius50p" data-symbol="falsecheck" :src="icon.icon_o"/>
+                              <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none radius50p" data-symbol="falseremove" :src="icon.icon_x"/>
+                              <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none radius50p op0_3" data-symbol="truecheck" :src="icon.icon_o"/>
+                              <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none radius50p op0_5" data-symbol="trueremove" :src="icon.icon_x"/>
+                              <b class="absolute top0 left0 right0 bottom0 font25 txt-c color-000" @click.self="pickTheBall($event)"></b>
+                            </span>
+                          </div>
                         </div>
                       </div>
                       <h4 class="txt-c mg0">
@@ -132,6 +139,7 @@ export default {
       },
       ballColors: ['#F15A5A', '#F0C419', '#4EBA6F', '#2D95BF', '#955BA5'],
       pickedBalls: [],
+      colAlphabet: 'ABCDEFGHI',
 
       btnType: 'check',
       btnState: {},
@@ -211,11 +219,6 @@ export default {
           currentValue.classList.add('none');
         })
       }
-    },
-
-    getDifficulty() {
-      const t = this;
-      t.isShowDifficulty = !t.isShowDifficulty;
     },
 
     getRandomNum() {
@@ -316,6 +319,7 @@ export default {
       let tmpArr = [];
       let odds = 0;
       let total = 0;
+      let eachNum = []; //각 숫자별 자릿수의 차
 
       for(let i = 0; i < 6; i++){
         tmpArr.push(t.randomNumArr7[i]);
@@ -335,7 +339,16 @@ export default {
             colomns += alphabets[i];
           }
         }
+        //각 숫자별 자릿수의 차
+        if(String(el).length == 1){
+          eachNum.push(0);
+        }else{
+          let numValue = String(el)[0] - String(el)[1];
+          eachNum.push(Math.abs(numValue)); 
+        }
       })
+
+      eachNum.sort();
 
       colomns = colomns.split('').sort().join('');
 
@@ -371,7 +384,7 @@ export default {
       ${changeStr}
       </p>`;
       t.moreHint += `<p class="mg0 mg-b10">
-      가장 큰 수 - 가장 작은 수: ${tmpArr[5] - tmpArr[0]}
+      각 숫자별 자릿수의 차(절대값): ${eachNum}
       </p>`;
 
     },
@@ -473,23 +486,23 @@ export default {
 
         switch(matchCnt){
           case 3:
-            alert(t.randomNumArr7 + '\n5등 당첨!\n나의 숫자\n' + t.pickedBalls);
+            alert('남은시간: ' + (120 - t.timer) + '\n' + t.randomNumArr7 + '\n5등 당첨!\n나의 숫자\n' + t.pickedBalls);
           break;
           case 4:
-            alert(t.randomNumArr7 + '\n4등 당첨!\n나의 숫자\n' + t.pickedBalls);
+            alert('남은시간: ' + (120 - t.timer) + '\n' + t.randomNumArr7 + '\n4등 당첨!\n나의 숫자\n' + t.pickedBalls);
           break;
           case 5:
             if(matchBonus){
-              alert(t.randomNumArr7 + '\n2등 당첨!\n나의 숫자\n' + t.pickedBalls);
+              alert('남은시간: ' + (120 - t.timer) + '\n' + t.randomNumArr7 + '\n2등 당첨!\n나의 숫자\n' + t.pickedBalls);
             }else{
-              alert(t.randomNumArr7 + '\n3등 당첨!\n나의 숫자\n' + t.pickedBalls);
+              alert('남은시간: ' + (120 - t.timer) + '\n' + t.randomNumArr7 + '\n3등 당첨!\n나의 숫자\n' + t.pickedBalls);
             }
           break;
           case 6:
-            alert(t.randomNumArr7 + '\n1등 당첨!\n나의 숫자\n' + t.pickedBalls);
+            alert('남은시간: ' + (120 - t.timer) + '\n' + t.randomNumArr7 + '\n1등 당첨!\n나의 숫자\n' + t.pickedBalls);
           break;
           default:
-            alert(t.randomNumArr7 + '\n꽝!\n나의 숫자\n' + t.pickedBalls);
+            alert('남은시간: ' + (120 - t.timer) + '\n' + t.randomNumArr7 + '\n꽝!\n나의 숫자\n' + t.pickedBalls);
             break;
         }
 
@@ -498,8 +511,6 @@ export default {
     },
 
     getQuestLevel() {
-      console.clear();
-
       const t = this;
       let copiedArr = JSON.parse(JSON.stringify(t.randomNumArr7));
 
@@ -508,14 +519,12 @@ export default {
       t.questLevel.row = {};
       t.questLevel.col = {};
       t.finishedNumCnt = 0;
+      t.finishedNumArr = [];
 
-      console.log(copiedArr);
-      console.log('초기', t.difficulty);
       let arr45 = [];
       for(let i = 0; i < 45; i++){
         arr45.push(i + 1);
       }
-
 
       let removeCnt = 0;
 
@@ -538,8 +547,6 @@ export default {
           t.difficulty -= (hasNumCnt - 2);
         }
       }
-
-      console.log('색깔 지우기', t.difficulty);
 
       for(let i = 0; i < 9; i++){ //열지우기(abc)
         let hasNumCnt = 0;
@@ -567,9 +574,198 @@ export default {
         //   t.difficulty -= (hasNumCnt - 1);
         // }
       }
-      console.log('열 지우기', t.difficulty);
 
-      let chkRemainNum = (row, col, remainedNum) => {
+      let copiedArrWithoutBonus = [];
+      let oddsCnt = 0;
+
+      for(let i = 0; i < 6; i++){
+        copiedArrWithoutBonus.push(copiedArr[i]);
+
+        if(copiedArr[i] % 2 == 1){
+          oddsCnt++;
+        }
+      }
+
+      //홀짝으로 인한 난이도 체크
+      if(oddsCnt == 1 || oddsCnt == 5){
+        t.difficulty -= 1;
+      }else if((oddsCnt == 0 || oddsCnt == 6)){
+        t.difficulty -= 2;
+      }
+
+      let arrToStr = copiedArrWithoutBonus.join('').split('').sort().join('');
+      let elObj = t.getStrCntObj(arrToStr);
+
+      //숫자구성에 없는 것 제거
+      for(let i = 0; i < 10; i++){
+        if(!elObj[i]){
+          t.difficulty--;
+          let arr45Leng = arr45.length;
+          let delCnt = 0;
+          for(let j = 0 ; j < arr45Leng; j++){ //for문 가끔 누락...
+            let hasNoNumIdx = String(arr45[j + delCnt]).indexOf(i);
+            if(hasNoNumIdx > -1){
+              arr45.splice(j + delCnt, 1);
+              delCnt--;
+            }
+          }
+        }
+      }
+
+      //056789 구성
+      let num056789Arr = [];
+      let valid056789NumArr = [];
+      for(let key in elObj){
+        if(key == 0 || key > 4){
+          let tmpNum056789Arr = [];
+          for(let i = 0 ; i < arr45.length; i++){
+            if(String(arr45[i]).substr(-1) == key){
+              num056789Arr.push(arr45[i]);
+              tmpNum056789Arr.push(arr45[i]);
+            }
+          }
+          if(elObj[key] >= tmpNum056789Arr.length){
+            t.difficulty -= tmpNum056789Arr.length;
+
+            tmpNum056789Arr.forEach((el) => {
+              let matchedNum = arr45.indexOf(el);
+              let matchedNum2 = copiedArrWithoutBonus.indexOf(el);
+              if(matchedNum > -1){
+                let finishedNum =  arr45.splice(matchedNum, 1);
+                t.finishedNumCnt += finishedNum.length;
+                t.finishedNumArr.push(finishedNum[0]);
+
+                for(let i = 0; i < 9; i++){
+                  if(i < 5){
+                    if(i * 9 < el && el < (i * 9) + 10){  //row(색깔)
+                      t.questLevel.row[i]--;
+                    }
+                  }
+
+                  if(el == (i + 1)
+                  || el == ((i + 1) + 9)
+                  || el == ((i + 1) + 18)
+                  || el == ((i + 1) + 27)
+                  || el == ((i + 1) + 36)){ //col(ABC)
+                    t.questLevel.col[i]--;
+                  }
+                }
+              }
+
+              if(matchedNum2 > -1){
+                copiedArrWithoutBonus.splice(matchedNum2, 1);
+              }
+            })
+
+            valid056789NumArr.push(key);
+          }
+        }
+      }
+
+      let removedNumArr = t.chkRemainNum(t.questLevel.row, t.questLevel.col, arr45);
+
+      removedNumArr.forEach((el) => {
+        let matchedNum = arr45.indexOf(el);
+        let matchedNum2 = copiedArrWithoutBonus.indexOf(el);
+        if(matchedNum > -1){
+          let finishedNum =  arr45.splice(matchedNum, 1);
+          t.finishedNumCnt += finishedNum.length;
+          t.finishedNumArr.push(finishedNum[0]);
+
+          // for(let i = 0; i < 9; i++){
+          //   if(i < 5){
+          //     if(i * 9 < el && el < (i * 9) + 10){  //row(색깔)
+          //       t.questLevel.row[i]--;
+          //       console.log('로우', t.questLevel.row[i], el, i);
+          //     }
+          //   }
+
+          //   if(el == (i + 1)
+          //   || el == ((i + 1) + 9)
+          //   || el == ((i + 1) + 18)
+          //   || el == ((i + 1) + 27)
+          //   || el == ((i + 1) + 36)){ //col(ABC)
+          //     t.questLevel.col[i]--;
+          //     console.log('콜', t.questLevel.col[i], el, i);
+          //   }
+          // }
+        }
+
+        if(matchedNum2 > -1){
+          copiedArrWithoutBonus.splice(matchedNum2, 1);
+        }
+      });
+
+
+      // console.log(arr45);
+      // console.log(copiedArrWithoutBonus);
+      // console.log(t.finishedNumArr);
+      // console.log('확정숫자갯수', t.finishedNumCnt);
+
+
+      // console.log('difficulty', t.difficulty);
+
+
+      // num056789Arr.forEach((el) => {
+        //   let isValid = false;
+      //     for(let i = 0; i < valid056789NumArr.length; i++){
+      //       if(valid056789NumArr[i] == String(el).substr(-1)){
+      //         isValid = true;
+      //         break;
+      //       }
+      //     }
+
+      //     if(isValid) arr45.splice(arr45.indexOf(el), 1);
+      // })
+
+
+      //임시
+      // if(t.difficulty < -20){
+      //   t.starCnt = 1;
+      // }else if(t.difficulty < -15){
+      //   t.starCnt = 2;
+      // }else if(t.difficulty < -10){
+      //   t.starCnt = 3;
+      // }else if(t.difficulty < -7){
+      //   t.starCnt = 4;
+      // }else{
+      //   t.starCnt = 5;
+      // }
+
+      if(t.finishedNumCnt < 1) t.starCnt = 5;
+      else if(t.finishedNumCnt < 2) t.starCnt = 4;
+      else if(t.finishedNumCnt < 4) t.starCnt = 3;
+      else if(t.finishedNumCnt < 6) t.starCnt = 2;
+      else t.starCnt = 1;
+
+
+
+      console.log(t.startCnt);
+      return t.difficulty;
+    },
+
+    getStrCntObj(str, loopCnt, obj) {
+      if(isNaN(str)){
+        console.log('String이 아닙니다.');
+        return false;
+      }
+      
+      const t = this;
+      let cnt = loopCnt ? loopCnt : 0;
+      let tmpObj = obj ? obj : {};
+
+      if(tmpObj[str[cnt]]){
+        tmpObj[str[cnt]]++;
+      }else{
+        tmpObj[str[cnt]] = 1;
+      }
+
+      if(++cnt != str.length) return t.getStrCntObj(str, cnt, tmpObj);
+
+      return tmpObj;
+    },
+
+    chkRemainNum (row, col, remainedNum) {
         let confirmedNumArr = [];
         for(let key in row){  //row(색깔)
           let tmpConfirmedNumArr = [];
@@ -579,7 +775,7 @@ export default {
             }
           })
 
-          if(row[key] == tmpConfirmedNumArr.length){
+          if(row[key] >= tmpConfirmedNumArr.length){
             tmpConfirmedNumArr.forEach((el) => {
               confirmedNumArr.push(el);
             })
@@ -598,7 +794,7 @@ export default {
             }
           })
 
-          if(col[key] == tmpConfirmedNumArr.length){
+          if(col[key] >= tmpConfirmedNumArr.length){
             tmpConfirmedNumArr.forEach((el) => {
               if(confirmedNumArr.indexOf(el) == -1){
                 confirmedNumArr.push(el);
@@ -609,173 +805,6 @@ export default {
 
         return confirmedNumArr;
       }
-
-      //행과 열을 지워 확정된 숫자 추출
-      let removedNumArr = chkRemainNum(t.questLevel.row, t.questLevel.col, arr45);
-
-      removedNumArr.forEach((el) => {
-        let matchedNum = arr45.indexOf(el);
-        if(matchedNum > -1){
-          t.finishedNumCnt += arr45.splice(matchedNum, 1).length;
-        }
-      })
-
-      t.difficulty -= t.finishedNumCnt;
-      console.log('크로스 후 공짜 번호', t.difficulty);
-
-      // for(let key in t.questLevel.row){ //가로세로체크(가로기준(row))
-      //   let colCnt = 0;
-      //   for(let key2 in t.questLevel.col){
-      //     if(t.questLevel.col[key2] == 0){
-      //       colCnt++;
-      //     }
-      //   }
-      //   if(t.questLevel.row[key] + colCnt > 8){
-      //     t.difficulty -= t.questLevel.row[key];
-      //   }
-      // }
-
-      // for(let key in t.questLevel.col){ //가로세로체크(세로기준(col))
-      //   let rowCnt = 0;
-      //   for(let key2 in t.questLevel.row){
-      //     if(t.questLevel.row[key2] == 0){
-      //       rowCnt++;
-      //     }
-      //   }
-      //   if(t.questLevel.col[key] + rowCnt > 4){
-      //     t.difficulty -= t.questLevel.col[key];
-      //   }
-      // }
-
-      let copiedArrWithoutBonus = [];
-      let oddsCnt = 0;
-      for(let i = 0; i < 6; i++){
-        copiedArrWithoutBonus.push(copiedArr[i]);
-
-        if(copiedArr[i] % 2 == 1){
-          oddsCnt++;
-        }
-      }
-
-      //홀짝으로 인한 난이도 체크
-      if(oddsCnt == 1 || oddsCnt == 5){
-        t.difficulty -= 1;
-      }else if((oddsCnt == 0 || oddsCnt == 6)){
-        t.difficulty -= 2;
-      }
-
-      console.log('홀짝', t.difficulty);
-
-      let arrToStr = copiedArrWithoutBonus.join('').split('').sort().join('');
-      let elObj = {};
-
-      for(let i = 0; i < arrToStr.length; i++){
-        if(!elObj[arrToStr[i]]){
-          elObj[arrToStr[i]] = 1;
-        }else{
-          elObj[arrToStr[i]]++;
-        }
-      }
-
-      for(let i = 0; i < 10; i++){
-        if(!elObj[i]){
-          t.difficulty--;
-          for(let j = 0 ; j < arr45.length; j++){
-            let hasNoNumIdx = String(arr45[j]).indexOf(i);
-            if(hasNoNumIdx > -1){
-              arr45.splice(j, 1);
-            }
-          }
-        }
-      }
-
-      console.log('숫자조합에 없는 것들', t.difficulty);
-
-      removedNumArr = chkRemainNum(t.questLevel.row, t.questLevel.col, arr45);
-
-      removedNumArr.forEach((el) => {
-        let matchedNum = arr45.indexOf(el);
-        if(matchedNum > -1){
-          t.finishedNumCnt += arr45.splice(matchedNum, 1).length;
-        }
-      })
-
-      t.difficulty -= removedNumArr.length;
-      console.log('숫자조합 및 행열크로스', t.difficulty);
-      console.log('진심 확정 숫자들의 수', t.finishedNumCnt);
-
-
-      //056789 구성
-      // let num056789Arr = [];
-      // let valid056789NumArr = [];
-      // console.log(arr45);
-      // for(let key in elObj){
-      //   if(key == 0 || key > 4){
-      //     let tmpNum056789Arr = [];
-      //     for(let i = 0 ; i < arr45.length; i++){
-      //       if(String(arr45[i]).substr(-1) == key){
-      //         console.log(key, ':', arr45[i]);
-      //         num056789Arr.push(arr45[i]);
-      //         tmpNum056789Arr.push(arr45[i]);
-      //       }
-      //     }
-      //     console.log(key);
-      //     console.log(elObj[key], '>=', tmpNum056789Arr.length);
-      //     if(elObj[key] >= tmpNum056789Arr.length){
-      //       t.difficulty -= tmpNum056789Arr.length;
-
-      //       tmpNum056789Arr.forEach((el) => {
-      //         let matchedNum = arr45.indexOf(el);
-      //         if(matchedNum > -1){
-      //           t.finishedNumCnt += arr45.splice(matchedNum, 1).length;
-      //         }
-      //       })
-
-      //       valid056789NumArr.push(key);
-      //     }
-      //   }
-      // }
-
-      // console.log('진심 확정 숫자들의 수', t.finishedNumCnt);
-      // console.log('056789 숫자 로직', t.difficulty);
-
-
-
-
-
-
-
-
-
-      // num056789Arr.forEach((el) => {
-        //   let isValid = false;
-      //     for(let i = 0; i < valid056789NumArr.length; i++){
-      //       if(valid056789NumArr[i] == String(el).substr(-1)){
-      //         isValid = true;
-      //         break;
-      //       }
-      //     }
-
-      //     if(isValid) arr45.splice(arr45.indexOf(el), 1);
-      // })
-
-
-      //임시
-      if(t.difficulty < -20){
-        t.starCnt = 1;
-      }else if(t.difficulty < -15){
-        t.starCnt = 2;
-      }else if(t.difficulty < -10){
-        t.starCnt = 3;
-      }else if(t.difficulty < -7){
-        t.starCnt = 4;
-      }else{
-        t.starCnt = 5;
-      }
-
-      console.log(arr45);
-      return t.difficulty;
-    }
   },
 
   created() {
