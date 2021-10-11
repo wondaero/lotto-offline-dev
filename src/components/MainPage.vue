@@ -81,8 +81,8 @@
                             </label>
                         </div>
                         <div>
-                          <div class="mg-b3">
-                            <span class="inline-block radius50p border-box font11 color-fff relative bg-bbb" style="width:7.8vw; height:7.8vw; max-width:43px; max-height:43px;"
+                          <div class="">
+                            <span class="inline-block font11 color-bbb relative" style="width:7.8vw; height:7.8vw; max-width:43px; max-height:43px;"
                             v-for="idx in 9" :key="idx" :class="{'mg-r3': idx != 9}">
                               <span class="vertical-m">{{colAlphabet[idx - 1]}}</span>
                             </span>
@@ -108,7 +108,16 @@
                       <button class="w70 pd10 border0 outline0 mg-r5 radius50 font12 border-eee" style="background:#fd0;" @click="sumitTheNumber();"><strong>제출</strong></button>
                       <!-- <button class="w70 pd10 border0 outline0 mg-r5 radius50 font12 border-eee bg-fff" @click="showNumberBoard();"><strong>취소</strong></button> -->
                       <button class="w70 pd10 border0 outline0 mg-r5 radius50 font12 border-eee bg-fff" @click="initNum();"><strong>초기화</strong></button>
-                      <button class="w60 pd10 border0 outline0 radius50 font12 border-eee bg-fff" @click="initLotto();"><strong>리셋</strong></button>
+                      <div class="mg-b5 block"></div>
+                      <select class="border0 outline0 border-eee w70 mg-r5 pd-h10 font12 radius50 v-top h35" v-model="setStarCnt">
+                        <option value="0">랜덤</option>
+                        <option :value="idx" v-for="idx in 5" :key="idx">&#9733;:{{idx}}</option>
+                        <!-- <option value="2">&#9733;:2</option>
+                        <option value="3">&#9733;:3</option>
+                        <option value="4">&#9733;:4</option>
+                        <option value="5">&#9733;:5</option> -->
+                      </select>
+                      <button class="w70 pd10 border0 outline0 mg-r5 radius50 font12 border-eee bg-fff v-top" @click="initLotto();"><strong>리셋</strong></button>
                     </div>
                   </div>
                 </article>
@@ -162,7 +171,8 @@ export default {
 
       difficulty: 0, //난이도
       isShowDifficulty: false,
-      starCnt: 0, 
+      starCnt: 0,
+      setStarCnt: 0,
 
       setInterval: '',
       timer: 0,
@@ -187,8 +197,11 @@ export default {
         clearInterval(t.setInterval);
         t.timer = 0;
         t.timerColor = '#5af181';
-  
-        t.getRandomNum();
+
+        let rdmNum = t.getRandomNum();
+        if(t.setStarCnt > 0 && rdmNum != t.setStarCnt){
+          return t.initLotto(true);
+        }
   
         t.setInterval = setInterval(() => {
           t.timer++;
@@ -260,7 +273,9 @@ export default {
 
       t.getBaseHint();
       t.getMoreHint();
-      t.getQuestLevel();
+
+      let questLevel = t.getQuestLevel();
+      return questLevel;
     },
 
     showNumberBoard() {
@@ -319,6 +334,7 @@ export default {
       let tmpArr = [];
       let odds = 0;
       let total = 0;
+      let multiTotal = 1;
       let eachNum = []; //각 숫자별 자릿수의 차
 
       for(let i = 0; i < 6; i++){
@@ -333,6 +349,8 @@ export default {
           odds++;
         }
         total += el;  //합계
+        multiTotal *= el; //각숫자의 곱
+
         let alphabets = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
         for(let i = 0 ; i < 9; i++){
           if(el == (1 + i) || el == (10 + i) || el == (19 + i) || el == (28 + i) || el == (37 + i)){
@@ -346,6 +364,7 @@ export default {
           let numValue = String(el)[0] - String(el)[1];
           eachNum.push(Math.abs(numValue)); 
         }
+
       })
 
       eachNum.sort();
@@ -384,7 +403,7 @@ export default {
       ${changeStr}
       </p>`;
       t.moreHint += `<p class="mg0 mg-b10">
-      각 숫자별 자릿수의 차(절대값): ${eachNum}
+      모든 숫자의 곱: ${multiTotal}
       </p>`;
 
     },
@@ -738,10 +757,8 @@ export default {
       else if(t.finishedNumCnt < 6) t.starCnt = 2;
       else t.starCnt = 1;
 
-
-
-      console.log(t.startCnt);
-      return t.difficulty;
+      // return t.difficulty;
+      return t.starCnt;
     },
 
     getStrCntObj(str, loopCnt, obj) {
