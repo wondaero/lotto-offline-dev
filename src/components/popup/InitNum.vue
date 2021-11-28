@@ -9,7 +9,7 @@
             <input type="radio" name="starCnt" :value="idx" class="relative top3 mg-r5" v-model="starCnt">
             <span>
               <img :src="[idx >= idx2 ? img.icon.star_on : img.icon.star_off]" v-for="(idx2) in 5" :key="idx2" alt="star" height="15"
-              class="relative top4" :style="{'z-index': 5 - idx2, 'left': ((idx2 - 1) * -8) + 'px'}"/>
+              class="relative top3" :style="{'z-index': 5 - idx2, 'left': ((idx2 - 1) * -8) + 'px'}"/>
             </span>
           </label>
         </div>

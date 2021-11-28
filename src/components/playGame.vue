@@ -33,10 +33,14 @@
                 <div class="pd-v10 mg-b10 border-v-dashed-ddd" v-if="isShowNumberBoard">
                   <div>
                     <div class="mg-b10 btns flex j-content-sb a-items-c">
-                      <span class="inline-block w80 h18 relative" style="box-shadow:inset 0 0 10px #999;" v-if="isShowNumberBoard">
-                        <span class="inline-block bg-blue absolute bottom0 left0 h100p"
-                        :style="{width: 100 - ((100 / 120) * timer) + '%', background: timerColor}"></span>
-                        <strong class="w100p inline-block txt-c relative color-000">{{120 - timer}}</strong>
+                      <span class="inline-block" style="perspective:100px;">
+                        <!-- <span class="inline-block w80 h18 relative" style="box-shadow:inset 0 0 10px #999, -1px -1px 0 1px #999; transform:rotateY(50deg);" v-if="isShowNumberBoard"> -->
+                        <span class="inline-block w80 h18 relative radius50 overflow-hidden bg-eee time-bar" style="box-shadow:-1px 0 0 2px #eee; transition:transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);"
+                        v-if="isShowNumberBoard" ref="timeBar" @click="effectTimeBar">
+                          <span class="inline-block bg-blue absolute bottom0 left0 h100p radius50"
+                          :style="{width: 100 - ((100 / 120) * timer) + '%', background: timerColor}"></span>
+                          <strong class="w100p inline-block txt-c relative color-000">{{120 - timer}}</strong>
+                        </span>
                       </span>
                       <h4 class="txt-c mg0 inline-block">{{pickedBalls.length}} / 6</h4>
                       <div>
@@ -112,7 +116,8 @@ import ball5 from '@/assets/img/balls/purpleBall.png';
 export default {
   name: 'playGame',
   props: {
-    },
+  },
+
   data: () => {
     return {
       name: 'playGame',
@@ -801,6 +806,18 @@ export default {
       const parent = t.$parent;
       parent.popup.isOpen = true;
       parent.popup.name = 'initNum';
+    },
+
+    test () {
+      const t = this;
+      alert(t.$store.state.test);
+    },
+
+    effectTimeBar () {
+      const t = this;
+      const target = t.$refs.timeBar;
+      if(target.classList.contains('time-bar')) target.classList.remove('time-bar')
+      else target.classList.add('time-bar');
     }
   },
 
@@ -822,4 +839,6 @@ export default {
 <style scoped>
   .btns img{opacity:0.3;}
   .btns input:checked + img{opacity:1;}
+
+  .time-bar{transform:rotate3d(-8, 10, 1, 55deg);} 
 </style>
