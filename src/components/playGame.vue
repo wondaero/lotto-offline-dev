@@ -1,6 +1,6 @@
 <template>
   <div class="max-w500 mg0auto h100vh flex a-items-c j-content-c" :style="{background:'#f8f8f8 url(' + img.mainBg + ') no-repeat 50% 0'}">
-    <div class="border-box pd10">
+    <div class="border-box pd10 w100p">
       <!-- <header class="flex j-content-sb pd10">
         <div class="flex a-items-c">
           <img src="" class="mg-r5 v-middle" width="30"/>
@@ -16,8 +16,8 @@
               <div class="pd10 bg-fff-0_6 radius10 txt-c" style="box-shadow:0 1px 1px #bbb;">
                 <div class="flex j-content-sb a-items-c mg-b10">
                   <span>
-                    <span class="font18 color-000-0_3" v-for="(idx) in 5" :key="idx"
-                    :class="[starCnt >= idx ? 'color-ffd400' : '']">&#9733;</span>
+                    <img :src="[starCnt >= idx ? img.icon.star_on : img.icon.star_off]" v-for="(idx) in 5" :key="idx" alt="star" height="15"
+                    class="relative top2" :style="{'z-index': 5 - idx, 'left': ((idx - 1) * -8) + 'px'}"/>
                   </span>
                   <!-- <h5 class="mg0" @click="initLotto();">리셋</h5> -->
                   <h5 class="mg0" @click="openResetPopup();">리셋</h5>
@@ -99,6 +99,9 @@ import mainBg from '@/assets/img/mainBg.png';
 import icon_x from '@/assets/img/icon_x.svg';
 import icon_o from '@/assets/img/icon_o.svg';
 
+import star_on from '@/assets/img/star_on.png';
+import star_off from '@/assets/img/star_off.png';
+
 import ball1 from '@/assets/img/balls/redBall.png';
 import ball2 from '@/assets/img/balls/yellowBall.png';
 import ball3 from '@/assets/img/balls/greenBall.png';
@@ -124,7 +127,9 @@ export default {
         mainBg: mainBg,
         icon: {
           icon_x: icon_x,
-          icon_o: icon_o
+          icon_o: icon_o,
+          star_on: star_on,
+          star_off: star_off
         },
       },
       ballColors: ['#F15A5A', '#F0C419', '#4EBA6F', '#2D95BF', '#955BA5'],

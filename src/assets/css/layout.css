@@ -582,11 +582,14 @@ input[type="number"].no-btn::-webkit-inner-spin-button {
 .top1{top:1px;}
 .top2{top:2px;}
 .top3{top:3px;}
+.top4{top:4px;}
 .top10{top:10px;}
 .top50{top:50px;}
 
 .top50p{top:50%;}
 
+.left-5{left:-5px;}
+.left-10{left:-10px;}
 .left-30{left:-30px;}
 .left-40{left:-40px;}
 .left-50{left:-50px;}
@@ -702,6 +705,7 @@ input[type="number"].no-btn::-webkit-inner-spin-button {
 .z-idx2{z-index:2;}
 .z-idx3{z-index:3;}
 .z-idx4{z-index:4;}
+.z-idx5{z-index:5;}
 /*****z-index*****/
 
 /*****border*****/
