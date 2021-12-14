@@ -33,15 +33,45 @@
                 <div class="pd-v10 mg-b10 border-v-dashed-ddd" v-if="isShowNumberBoard">
                   <div>
                     <div class="mg-b10 btns flex j-content-sb a-items-c">
-                      <span class="inline-block" style="perspective:100px;">
-                        <!-- <span class="inline-block w80 h18 relative" style="box-shadow:inset 0 0 10px #999, -1px -1px 0 1px #999; transform:rotateY(50deg);" v-if="isShowNumberBoard"> -->
-                        <span class="inline-block w80 h18 relative radius50 overflow-hidden bg-eee time-bar" style="box-shadow:-1px 0 0 2px #eee; transition:transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);"
+
+
+                      <span class="inline-block" style1="perspective:100px;">
+                        <span class="inline-block w80 h20 relative" :style="{transform : timerAngle}" style="transition:transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); transform-style:preserve-3d;"
+                        v-if="isShowNumberBoard" ref="" @click="effectTimeBar">
+                          <span class="border-box absolute top0 left0 border-000 bg-fff w80 h20" style="transform:translateZ(10px);">
+                            <span class="inline-block bg-blue absolute bottom0 left0 h100p"
+                            :style="{width: 100 - ((100 / 120) * timer) + '%', background: timerColor}"></span>
+                            <strong class="w100p inline-block txt-c relative color-000">{{120 - timer}}</strong>
+                          </span>
+                          <span class="border-box absolute top0 left0 border-000 bg-fff w80 h20" style="transform:translateY(10px) rotateX(-90deg);">
+                            <span class="inline-block bg-blue absolute bottom0 left0 h100p"
+                            :style="{width: 100 - ((100 / 120) * timer) + '%', background: timerColor}"></span>
+                            <strong class="w100p inline-block txt-c relative color-000">{{120 - timer}}</strong>
+                          </span>
+                          <span class="border-box absolute top0 left0 border-000 bg-fff w80 h20" style="transform:translateY(-10px) rotateX(90deg);">
+                            <span class="inline-block bg-blue absolute bottom0 left0 h100p"
+                            :style="{width: 100 - ((100 / 120) * timer) + '%', background: timerColor}"></span>
+                            <strong class="w100p inline-block txt-c relative color-000">{{120 - timer}}</strong>
+                          </span>
+                          <span class="border-box absolute top0 left0 border-000 bg-fff w80 h20" style="transform:translateZ(-10px) rotateX(180deg);">
+                            <span class="inline-block bg-blue absolute bottom0 left0 h100p"
+                            :style="{width: 100 - ((100 / 120) * timer) + '%', background: timerColor}"></span>
+                            <strong class="w100p inline-block txt-c relative color-000">{{120 - timer}}</strong>
+                          </span>
+                          <span class="border-box absolute top0 left0 border-000 bg-fff w20 h20" style="transform:translateX(-10px) rotateY(-90deg);"></span>  <!-- 3 -->
+                          <span class="border-box absolute top0 left0 border-000 bg-fff w20 h20" style="transform:translateX(70px) rotateY(-90deg);"></span> <!-- 4 -->
+                        </span>
+                      </span>
+
+                      <!-- <span class="inline-block" style="perspective:100px;">
+                        <span class="inline-block w80 h18 relative radius50 overflow-hidden bg-eee time-bar2" style="box-shadow:-1px 0 0 2px #eee; transition:transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);"
                         v-if="isShowNumberBoard" ref="timeBar" @click="effectTimeBar">
                           <span class="inline-block bg-blue absolute bottom0 left0 h100p radius50"
                           :style="{width: 100 - ((100 / 120) * timer) + '%', background: timerColor}"></span>
                           <strong class="w100p inline-block txt-c relative color-000">{{120 - timer}}</strong>
                         </span>
-                      </span>
+                      </span> -->
+
                       <h4 class="txt-c mg0 inline-block">{{pickedBalls.length}} / 6</h4>
                       <div>
                         <label class="mg-r10">
@@ -157,9 +187,6 @@ export default {
         col: {}
       },
 
-      finishedNumArr: [],
-      finishedNumCnt: 0,
-
       isShowDifficulty: false,
       starCnt: 0,
       setStarCnt: 0,
@@ -167,6 +194,7 @@ export default {
       setInterval: '',
       timer: 0,
       timerColor: '#5af181',
+      timerAngle: 'rotate3d(40, 0, -5, -15deg)',
 
       gameLevel: {
         arr45: [],
@@ -196,6 +224,7 @@ export default {
         clearInterval(t.setInterval);
         t.timer = 0;
         t.timerColor = '#5af181';
+        t.timerAngle = 'rotate3d(40, 0, -5, 3deg)';
 
         let rdmNum = t.getRandomNum();
         if(t.setStarCnt > 0 && rdmNum != t.setStarCnt){
@@ -207,15 +236,17 @@ export default {
 
           if(t.timer > 109){
             t.timerColor = '#f55222';
+            t.timerAngle = 'rotate3d(40, 0, -5, 193deg)';
           }else if(t.timer > 59){
             t.timerColor = '#f5e67e';
+            t.timerAngle = 'rotate3d(40, 0, -5, 83deg)';
           }
 
           if(t.timer == 120){
             clearInterval(t.setInterval);
             return t.initLotto();
           }
-        }, 1000);
+        }, 1001);
       }
     },
 
@@ -288,15 +319,17 @@ export default {
 
           if(t.timer > 109){
             t.timerColor = '#f55222';
+            t.timerAngle = 'rotate3d(40, 0, -5, 193deg)';
           }else if(t.timer > 59){
             t.timerColor = '#f5e67e';
+            t.timerAngle = 'rotate3d(40, 0, -5, 83deg)';
           }
-  
-          if(t.timer == 120){
+
+        if(t.timer == 120){
             clearInterval(t.setInterval);
             t.initLotto();
           }
-        }, 1000);
+        }, 1001);
 
 
     },
@@ -700,29 +733,24 @@ export default {
       for(let key in elObj){
         if(key == 0 || key > 4){
           let tmpNum056789Arr = [];
-          for(let i = 0 ; i < lv.arr45.length; i++){
+          for(let i = 0; i < lv.arr45.length; i++){
             if(String(lv.arr45[i]).substr(-1) == key){
               num056789Arr.push(lv.arr45[i]);
               tmpNum056789Arr.push(lv.arr45[i]);
             }
           }
           if(elObj[key] >= tmpNum056789Arr.length){
-
             tmpNum056789Arr.forEach((el) => {
               let matchedNum = lv.arr45.indexOf(el);
               let matchedNum2 = lv.arr6.indexOf(el);
               if(matchedNum > -1){
-                let finishedNum =  lv.arr45.splice(matchedNum, 1);
-                t.finishedNumCnt += finishedNum.length;
-                t.finishedNumArr.push(finishedNum[0]);
-
+                lv.arr45.splice(matchedNum, 1);
                 for(let i = 0; i < 9; i++){
                   if(i < 5){
                     if(i * 9 < el && el < (i * 9) + 10){  //row(색깔)
                       lv.row[i]--;
                     }
                   }
-
                   if(el == (i + 1)
                   || el == ((i + 1) + 9)
                   || el == ((i + 1) + 18)
@@ -732,17 +760,17 @@ export default {
                   }
                 }
               }
-
               if(matchedNum2 > -1){
                 lv.arr6.splice(matchedNum2, 1);
               }
             })
-
             valid056789NumArr.push(key);
-
           }
         }
       }
+
+      console.log(valid056789NumArr);
+
       return valid056789NumArr;
     },
 
@@ -840,5 +868,11 @@ export default {
   .btns img{opacity:0.3;}
   .btns input:checked + img{opacity:1;}
 
-  .time-bar{transform:rotate3d(-8, 10, 1, 55deg);} 
+  .time-bar{transform:rotate3d(40, 0, -5, 3deg);}
+  .time-bar2{transform:rotate3d(40, 0, -5, 83deg);}
+  .time-bar3{transform:rotate3d(40, 0, -5, 193deg);}
+
+  .timer-angle{transform:rotate3d(40, 0, -5, 3deg);}
+  .timer-angle2{transform:rotate3d(40, 0, -5, 83deg);}
+  .timer-angle3{transform:rotate3d(40, 0, -5, 193deg);}
 </style>
