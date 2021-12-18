@@ -33,44 +33,15 @@
                 <div class="pd-v10 mg-b10 border-v-dashed-ddd" v-if="isShowNumberBoard">
                   <div>
                     <div class="mg-b10 btns flex j-content-sb a-items-c">
-
-
-                      <span class="inline-block" style1="perspective:100px;">
-                        <span class="inline-block w80 h20 relative" :style="{transform : timerAngle}" style="transition:transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); transform-style:preserve-3d;"
-                        v-if="isShowNumberBoard" ref="" @click="effectTimeBar">
-                          <span class="border-box absolute top0 left0 border-000 bg-fff w80 h20" style="transform:translateZ(10px);">
-                            <span class="inline-block bg-blue absolute bottom0 left0 h100p"
-                            :style="{width: 100 - ((100 / 120) * timer) + '%', background: timerColor}"></span>
-                            <strong class="w100p inline-block txt-c relative color-000">{{120 - timer}}</strong>
-                          </span>
-                          <span class="border-box absolute top0 left0 border-000 bg-fff w80 h20" style="transform:translateY(10px) rotateX(-90deg);">
-                            <span class="inline-block bg-blue absolute bottom0 left0 h100p"
-                            :style="{width: 100 - ((100 / 120) * timer) + '%', background: timerColor}"></span>
-                            <strong class="w100p inline-block txt-c relative color-000">{{120 - timer}}</strong>
-                          </span>
-                          <span class="border-box absolute top0 left0 border-000 bg-fff w80 h20" style="transform:translateY(-10px) rotateX(90deg);">
-                            <span class="inline-block bg-blue absolute bottom0 left0 h100p"
-                            :style="{width: 100 - ((100 / 120) * timer) + '%', background: timerColor}"></span>
-                            <strong class="w100p inline-block txt-c relative color-000">{{120 - timer}}</strong>
-                          </span>
-                          <span class="border-box absolute top0 left0 border-000 bg-fff w80 h20" style="transform:translateZ(-10px) rotateX(180deg);">
-                            <span class="inline-block bg-blue absolute bottom0 left0 h100p"
-                            :style="{width: 100 - ((100 / 120) * timer) + '%', background: timerColor}"></span>
-                            <strong class="w100p inline-block txt-c relative color-000">{{120 - timer}}</strong>
-                          </span>
-                          <span class="border-box absolute top0 left0 border-000 bg-fff w20 h20" style="transform:translateX(-10px) rotateY(-90deg);"></span>  <!-- 3 -->
-                          <span class="border-box absolute top0 left0 border-000 bg-fff w20 h20" style="transform:translateX(70px) rotateY(-90deg);"></span> <!-- 4 -->
+                      <span class="inline-block">
+                        <!-- <span class="inline-block w80 h18 relative radius50 overflow-hidden bg-eee"
+                        v-if="isShowNumberBoard"> -->
+                        <span class="inline-block w80 h18 relative radius50 bg-eee" v-if="isShowNumberBoard">
+                          <span class="inline-block bg-blue absolute bottom0 left0 h100p radius50"
+                          :style="{width: 100 - ((100 / 120) * timer) + '%', background: `linear-gradient(to bottom, #eee, ${timerColor}, #eee)`}"></span>
+                          <strong class="w100p inline-block txt-c relative color-000" :class="timerEffectClass">{{120 - timer}}</strong>
                         </span>
                       </span>
-
-                      <!-- <span class="inline-block" style="perspective:100px;">
-                        <span class="inline-block w80 h18 relative radius50 overflow-hidden bg-eee time-bar2" style="box-shadow:-1px 0 0 2px #eee; transition:transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);"
-                        v-if="isShowNumberBoard" ref="timeBar" @click="effectTimeBar">
-                          <span class="inline-block bg-blue absolute bottom0 left0 h100p radius50"
-                          :style="{width: 100 - ((100 / 120) * timer) + '%', background: timerColor}"></span>
-                          <strong class="w100p inline-block txt-c relative color-000">{{120 - timer}}</strong>
-                        </span>
-                      </span> -->
 
                       <h4 class="txt-c mg0 inline-block">{{pickedBalls.length}} / 6</h4>
                       <div>
@@ -99,10 +70,10 @@
                         <span class="inline-block border-box font11 color-fff relative radius50p" style="width:8vw; height:8vw; max-width:43px; max-height:43px;"
                         v-for="idx2 in 9" :key="idx2" :style="{background:`url(${img.balls[idx]}) no-repeat 50%`, backgroundSize: '100%'}" :class="{'mg-r5': idx2 != 9}">
                           <span class="vertical-m">{{((idx - 1) * 9) + idx2}}</span>
-                          <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none radius50p scale1_3" data-symbol="falsecheck" :src="img.icon.icon_o"/>
-                          <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none radius50p scale1_3" data-symbol="falseremove" :src="img.icon.icon_x"/>
-                          <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none radius50p scale1_3 op0_5" data-symbol="truecheck" :src="img.icon.icon_o"/>
-                          <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none radius50p scale1_3 op0_5" data-symbol="trueremove" :src="img.icon.icon_x"/>
+                          <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none scale1_3" data-symbol="falsecheck" :src="img.icon.icon_o"/>
+                          <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none scale1_3" data-symbol="falseremove" :src="img.icon.icon_x"/>
+                          <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none scale1_3 op0_5" data-symbol="truecheck" :src="img.icon.icon_o"/>
+                          <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none scale1_3 op0_5" data-symbol="trueremove" :src="img.icon.icon_x"/>
                           <b class="absolute top0 left0 right0 bottom0 font25 txt-c color-000" @click.self="pickTheBall($event)"></b>
                         </span>
                       </div>
@@ -194,7 +165,7 @@ export default {
       setInterval: '',
       timer: 0,
       timerColor: '#5af181',
-      timerAngle: 'rotate3d(40, 0, -5, -15deg)',
+      timerEffectClass: '',
 
       gameLevel: {
         arr45: [],
@@ -202,8 +173,21 @@ export default {
         arr7: [],
         row: {},
         col: {},
-
       },
+
+      // ledNum: {
+      //   none: [],
+      //   0: [0,1,2,3,5,6,8,9,11,12,13,14],
+      //   1: [2,5,8,11,14],
+      //   2: [0,1,2,5,6,7,8,9,12,13,14],
+      //   3: [0,1,2,5,6,7,8,11,12,13,14],
+      //   4: [0,2,3,5,6,7,8,11,14],
+      //   5: [0,1,2,3,6,7,8,11,12,13,14],
+      //   6: [0,1,2,3,6,7,8,9,11,12,13,14],
+      //   7: [0,1,2,5,8,11,14],
+      //   8: [0,1,2,3,5,6,7,8,9,11,12,13,14],
+      //   9: [0,1,2,3,5,6,7,8,11,12,13,14],
+      // },
     }
   },
 
@@ -224,29 +208,25 @@ export default {
         clearInterval(t.setInterval);
         t.timer = 0;
         t.timerColor = '#5af181';
-        t.timerAngle = 'rotate3d(40, 0, -5, 3deg)';
 
         let rdmNum = t.getRandomNum();
-        if(t.setStarCnt > 0 && rdmNum != t.setStarCnt){
-          return t.initLotto(true);
-        }
+        if(t.setStarCnt > 0 && rdmNum != t.setStarCnt) return t.initLotto(true);
   
         t.setInterval = setInterval(() => {
           t.timer++;
 
-          if(t.timer > 109){
-            t.timerColor = '#f55222';
-            t.timerAngle = 'rotate3d(40, 0, -5, 193deg)';
-          }else if(t.timer > 59){
-            t.timerColor = '#f5e67e';
-            t.timerAngle = 'rotate3d(40, 0, -5, 83deg)';
-          }
+          t.timerEffectClass = 'scale2';
+          setTimeout(() => {t.timerEffectClass = 'timer-effect';});
+
+          if(t.timer > 109) t.timerColor = '#f55222'
+          else if(t.timer > 59) t.timerColor = '#f5e67e';
 
           if(t.timer == 120){
             clearInterval(t.setInterval);
             return t.initLotto();
           }
-        }, 1001);
+
+        }, 1000);
       }
     },
 
@@ -282,9 +262,7 @@ export default {
       }
 
       let arr45 = [];
-      for(let i = 0; i < 45; i++){
-        arr45.push(i + 1);
-      }
+      for(let i = 0; i < 45; i++) arr45.push(i + 1);
 
       let shuffledArr = getShuffleArr(arr45, 7);
       shuffledArr[0] = '+ ' + shuffledArr[0];
@@ -317,29 +295,24 @@ export default {
         t.setInterval = setInterval(() => {
           t.timer++;
 
-          if(t.timer > 109){
-            t.timerColor = '#f55222';
-            t.timerAngle = 'rotate3d(40, 0, -5, 193deg)';
-          }else if(t.timer > 59){
-            t.timerColor = '#f5e67e';
-            t.timerAngle = 'rotate3d(40, 0, -5, 83deg)';
-          }
+          t.timerEffectClass = 'scale2';
+          setTimeout(() => {t.timerEffectClass = 'timer-effect';});
 
-        if(t.timer == 120){
-            clearInterval(t.setInterval);
-            t.initLotto();
-          }
-        }, 1001);
+          if(t.timer > 109) t.timerColor = '#f55222'
+          else if(t.timer > 59) t.timerColor = '#f5e67e';
 
+          if(t.timer == 120){
+              clearInterval(t.setInterval);
+              t.initLotto();
+          }
+        }, 1000);
 
     },
 
     getBaseHint() {
       const t = this;
       let tmpArr = [];
-      for(let i = 0; i < 6; i++){
-        tmpArr.push(t.randomNumArr7[i]);
-      }
+      for(let i = 0; i < 6; i++) tmpArr.push(t.randomNumArr7[i]);
       let ballColors = [];
 
       tmpArr.forEach((el) => {
@@ -368,17 +341,13 @@ export default {
       let multiTotal = 1;
       let eachNum = []; //각 숫자별 자릿수의 차
 
-      for(let i = 0; i < 6; i++){
-        tmpArr.push(t.randomNumArr7[i]);
-      }
+      for(let i = 0; i < 6; i++) tmpArr.push(t.randomNumArr7[i]);
 
       let arrToStr = tmpArr.join('').split('').sort().join('');
       let colomns = '';
 
       tmpArr.forEach((el) => {
-        if(el % 2 == 1){  //홀짝
-          odds++;
-        }
+        if(el % 2 == 1) odds++; //홀짝
         total += el;  //합계
         multiTotal *= el; //각숫자의 곱
 
@@ -414,9 +383,7 @@ export default {
           duplCnt = 1;
         }
         duplStr = colomns[i];
-        if(i == (colomns.length - 1)){
-          changeStr += duplCnt;
-        }
+        if(i == (colomns.length - 1)) changeStr += duplCnt;
       }
 
       //출력
@@ -442,9 +409,7 @@ export default {
     showMoreHint() {
       const t = this;
       if(t.isShowHint) return;
-      if(confirm('힌트를 보려면 하트가 소진됩니다.\n진행하시겠습니까?')){
-        t.isShowHint = true;
-      }
+      if(confirm('힌트를 보려면 하트가 소진됩니다.\n진행하시겠습니까?')) t.isShowHint = true;
     },
 
     pickTheBall(target) {
@@ -461,9 +426,7 @@ export default {
       if(t.btnState[btnNum] == (t.isTestBtn + t.btnType)){
         if(t.btnType == 'check'){
           let elemIdx = tmpArr.indexOf(Number(btnNum));
-          if (elemIdx > -1){
-            tmpArr.splice(elemIdx, 1);
-          }
+          if (elemIdx > -1) tmpArr.splice(elemIdx, 1);
         }
 
         parent.querySelectorAll('[data-symbol]').forEach((currentValue) => {
@@ -485,9 +448,7 @@ export default {
           }
         }else{
           let elemIdx = tmpArr.indexOf(Number(btnNum));
-          if (elemIdx > -1){
-            tmpArr.splice(elemIdx, 1);
-          }
+          if (elemIdx > -1) tmpArr.splice(elemIdx, 1);
         }
 
         parent.querySelectorAll('[data-symbol]').forEach((currentValue) => {
@@ -600,22 +561,13 @@ export default {
 
       }
 
-      if(!lv1().length){
-        return t.starCnt = 1;
-      }else{
-        // alert();
-        lv2();
-      }
+      if(!lv1().length) return t.starCnt = 1
+      else lv2();
 
-      if(lv.arr6.length > 5){
-        t.starCnt = 5;
-      }else if(lv.arr6.length > 4){
-        t.starCnt = 4;
-      }else if(lv.arr6.length > 2){
-        t.starCnt = 3;
-      }else{
-        t.starCnt = 2;
-      }
+      if(lv.arr6.length > 5) t.starCnt = 5
+      else if(lv.arr6.length > 4) t.starCnt = 4
+      else if(lv.arr6.length > 2) t.starCnt = 3
+      else t.starCnt = 2;
 
       return t.starCnt;
     },
@@ -630,11 +582,8 @@ export default {
       let cnt = loopCnt ? loopCnt : 0;
       let tmpObj = obj ? obj : {};
 
-      if(tmpObj[str[cnt]]){
-        tmpObj[str[cnt]]++;
-      }else{
-        tmpObj[str[cnt]] = 1;
-      }
+      if(tmpObj[str[cnt]]) tmpObj[str[cnt]]++
+      else tmpObj[str[cnt]] = 1;
 
       if(++cnt != str.length) return t.getStrCntObj(str, cnt, tmpObj);
 
@@ -650,9 +599,7 @@ export default {
         let hasNumCnt = 0;
 
         for(let j = 0; j < 45; j++){
-          if((i * 9) < lv.arr6[j] && lv.arr6[j] < ((i * 9) + 10)){
-            hasNumCnt++;
-          }
+          if((i * 9) < lv.arr6[j] && lv.arr6[j] < ((i * 9) + 10)) hasNumCnt++;
         }
 
         lv.row[i] = hasNumCnt;
@@ -692,9 +639,7 @@ export default {
         if(hasNumCnt == 0){
           for(let k = 0; k < 5; k++){
             let elIdx = lv.arr45.indexOf(i + (k * 9) + 1);
-            if(elIdx > -1){
-              lv.arr45.splice(elIdx, 1);
-            }
+            if(elIdx > -1) lv.arr45.splice(elIdx, 1);
           }
         }
       }
@@ -760,17 +705,14 @@ export default {
                   }
                 }
               }
-              if(matchedNum2 > -1){
-                lv.arr6.splice(matchedNum2, 1);
-              }
+
+              if(matchedNum2 > -1) lv.arr6.splice(matchedNum2, 1);
             })
             valid056789NumArr.push(key);
           }
         }
       }
-
-      console.log(valid056789NumArr);
-
+      // console.log(valid056789NumArr);
       return valid056789NumArr;
     },
 
@@ -780,9 +722,7 @@ export default {
       for(let key in row){  //row(색깔)
         let tmpConfirmedNumArr = [];
         remainedNum.forEach((el) => {
-          if(Number(key) * 9 < el && el < (Number(key) * 9) + 10){
-            tmpConfirmedNumArr.push(el);
-          }
+          if(Number(key) * 9 < el && el < (Number(key) * 9) + 10) tmpConfirmedNumArr.push(el);
         })
 
         if(row[key] >= tmpConfirmedNumArr.length){
@@ -806,9 +746,7 @@ export default {
 
         if(col[key] >= tmpConfirmedNumArr.length){
           tmpConfirmedNumArr.forEach((el) => {
-            if(confirmedNumArr.indexOf(el) == -1){
-              confirmedNumArr.push(el);
-            }
+            if(confirmedNumArr.indexOf(el) == -1) confirmedNumArr.push(el);
           })
         }
       }
@@ -835,18 +773,6 @@ export default {
       parent.popup.isOpen = true;
       parent.popup.name = 'initNum';
     },
-
-    test () {
-      const t = this;
-      alert(t.$store.state.test);
-    },
-
-    effectTimeBar () {
-      const t = this;
-      const target = t.$refs.timeBar;
-      if(target.classList.contains('time-bar')) target.classList.remove('time-bar')
-      else target.classList.add('time-bar');
-    }
   },
 
   created() {
@@ -854,12 +780,15 @@ export default {
     for(let i = 0; i < 45; i++){
       t.btnState[i + 1] = false;
     }
+    // t.getRandomNum();
+    // t.showNumberBoard();
   },
   mounted() {
-    const t = this;
-    t.getRandomNum();
-    t.showNumberBoard();
-  }
+      const t = this;
+      t.getRandomNum();
+      t.showNumberBoard();
+  },
+
 }
 </script>
 
@@ -868,11 +797,5 @@ export default {
   .btns img{opacity:0.3;}
   .btns input:checked + img{opacity:1;}
 
-  .time-bar{transform:rotate3d(40, 0, -5, 3deg);}
-  .time-bar2{transform:rotate3d(40, 0, -5, 83deg);}
-  .time-bar3{transform:rotate3d(40, 0, -5, 193deg);}
-
-  .timer-angle{transform:rotate3d(40, 0, -5, 3deg);}
-  .timer-angle2{transform:rotate3d(40, 0, -5, 83deg);}
-  .timer-angle3{transform:rotate3d(40, 0, -5, 193deg);}
+  .timer-effect{transform:scale(1); transition:transform .5s;}
 </style>

@@ -205,6 +205,8 @@ input[type="number"].no-btn::-webkit-inner-spin-button {
 
 
 
+.w3{width:3px;}
+.w4{width:4px;}
 .w10{width:10px;}
 .w15{width:15px;}
 .w20{width:20px;}
@@ -288,6 +290,7 @@ input[type="number"].no-btn::-webkit-inner-spin-button {
 /*****height*****/
 .h1px{height:1px;}	/*부트스트랩 h1와 중복으로 인해*/
 .h3px{height:3px;}	/*부트스트랩 h3와 중복으로 인해*/
+.h4px{height:4px;}	/*부트스트랩 h4와 중복으로 인해*/
 .h5px{height:5px;}	/*부트스트랩 h5와 중복으로 인해*/
 .h10{height:10px;}
 .h15{height:15px;}
@@ -633,7 +636,7 @@ input[type="number"].no-btn::-webkit-inner-spin-button {
 .bg-honeydew{background:honeyDew;}
 .bg-linen{background:linen;}
 .bg-green{background:green;}
-.bg-lime, .bg-00f{background:lime;}
+.bg-lime, .bg-0f0{background:lime;}
 .bg-chartreuse{background:chartreuse;}
 .bg-aquamarine{background:aquamarine;}
 .bg-f0{background:#f0f0f0;}
