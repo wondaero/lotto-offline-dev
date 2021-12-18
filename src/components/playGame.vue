@@ -39,7 +39,7 @@
                         <span class="inline-block w80 h18 relative radius50 bg-eee overflow-hidden" style="box-shadow:0 1px 0 #ccc;" v-if="isShowNumberBoard">
                           <span class="inline-block bg-blue absolute bottom0 left0 h100p radius50"
                           :style="{width: 100 - ((100 / 120) * timer) + '%', background: `linear-gradient(to bottom, #eee, ${timerColor}, #eee)`}"></span>
-                          <strong class="w100p inline-block txt-c relative color-000" :class="timerEffectClass">{{120 - timer}}</strong>
+                          <strong class="w100p inline-block txt-c relative color-000 relative op1" :class="timerEffectClass">{{120 - timer}}</strong>
                         </span>
                       </span>
 
@@ -165,7 +165,7 @@ export default {
       setInterval: '',
       timer: 0,
       timerColor: '#5af181',
-      timerEffectClass: '',
+      timerEffectClass: 'timer-effect2',
 
       gameLevel: {
         arr45: [],
@@ -212,18 +212,18 @@ export default {
         let rdmNum = t.getRandomNum();
         if(t.setStarCnt > 0 && rdmNum != t.setStarCnt) return t.initLotto(true);
 
-        t.timerEffectClass = 'timer-effect';
+        t.timerEffectClass = 'timer-effect2';
   
         t.setInterval = setInterval(() => {
           t.timer++;
 
-          // t.timerEffectClass = 'scale2';
-          // setTimeout(() => {t.timerEffectClass = 'timer-effect';});
+          // t.timerEffectClass = 'timer-effect';
+          // setTimeout(() => {t.timerEffectClass = 'timer-effect2';}, 100);
 
           if(t.timer > 109){
             t.timerColor = '#f55222';
-            t.timerEffectClass = 'scale1_2';
-            setTimeout(() => {t.timerEffectClass = 'timer-effect';}, 100);
+            t.timerEffectClass = 'timer-effect';
+            setTimeout(() => {t.timerEffectClass = 'timer-effect2';}, 100);
           }
           else if(t.timer > 59){
             t.timerColor = '#f5e67e';
@@ -300,18 +300,19 @@ export default {
         t.pickedBalls = [];
         t.isTestBtn = false;
 
-        t.timerEffectClass = 'timer-effect';
+        t.timerEffectClass = 'timer-effect2';
+
         
         t.setInterval = setInterval(() => {
           t.timer++;
 
-          // t.timerEffectClass = 'scale2';
-          // setTimeout(() => {t.timerEffectClass = 'timer-effect';});
+          // t.timerEffectClass = 'timer-effect';
+          // setTimeout(() => {t.timerEffectClass = 'timer-effect2';}, 100);
 
           if(t.timer > 109){
             t.timerColor = '#f55222';
-            t.timerEffectClass = 'scale1_2';
-            setTimeout(() => {t.timerEffectClass = 'timer-effect';}, 100);
+            t.timerEffectClass = 'timer-effect';
+            setTimeout(() => {t.timerEffectClass = 'timer-effect2';}, 100);
           }
           else if(t.timer > 59){
             t.timerColor = '#f5e67e';
@@ -813,5 +814,6 @@ export default {
   .btns img{opacity:0.3;}
   .btns input:checked + img{opacity:1;}
 
-  .timer-effect{transform:scale(1); transition:transform .5s;}
+  .timer-effect{opacity:1; transform:scaleX(2);}
+  .timer-effect2{opacity:1; transform:scaleX(1); transition:all .5s cubic-bezier(0.68, -0.55, 0.27, 1.55);}
 </style>
