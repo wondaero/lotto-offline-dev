@@ -36,7 +36,7 @@
                       <span class="inline-block">
                         <!-- <span class="inline-block w80 h18 relative radius50 overflow-hidden bg-eee"
                         v-if="isShowNumberBoard"> -->
-                        <span class="inline-block w80 h18 relative radius50 bg-eee" v-if="isShowNumberBoard">
+                        <span class="inline-block w80 h18 relative radius50 bg-eee overflow-hidden" style="box-shadow:0 1px 0 #ccc;" v-if="isShowNumberBoard">
                           <span class="inline-block bg-blue absolute bottom0 left0 h100p radius50"
                           :style="{width: 100 - ((100 / 120) * timer) + '%', background: `linear-gradient(to bottom, #eee, ${timerColor}, #eee)`}"></span>
                           <strong class="w100p inline-block txt-c relative color-000" :class="timerEffectClass">{{120 - timer}}</strong>
@@ -211,15 +211,23 @@ export default {
 
         let rdmNum = t.getRandomNum();
         if(t.setStarCnt > 0 && rdmNum != t.setStarCnt) return t.initLotto(true);
+
+        t.timerEffectClass = 'timer-effect';
   
         t.setInterval = setInterval(() => {
           t.timer++;
 
-          t.timerEffectClass = 'scale2';
-          setTimeout(() => {t.timerEffectClass = 'timer-effect';});
+          // t.timerEffectClass = 'scale2';
+          // setTimeout(() => {t.timerEffectClass = 'timer-effect';});
 
-          if(t.timer > 109) t.timerColor = '#f55222'
-          else if(t.timer > 59) t.timerColor = '#f5e67e';
+          if(t.timer > 109){
+            t.timerColor = '#f55222';
+            t.timerEffectClass = 'scale1_2';
+            setTimeout(() => {t.timerEffectClass = 'timer-effect';}, 100);
+          }
+          else if(t.timer > 59){
+            t.timerColor = '#f5e67e';
+          }
 
           if(t.timer == 120){
             clearInterval(t.setInterval);
@@ -291,15 +299,23 @@ export default {
         t.isShowNumberBoard = !t.isShowNumberBoard;
         t.pickedBalls = [];
         t.isTestBtn = false;
+
+        t.timerEffectClass = 'timer-effect';
         
         t.setInterval = setInterval(() => {
           t.timer++;
 
-          t.timerEffectClass = 'scale2';
-          setTimeout(() => {t.timerEffectClass = 'timer-effect';});
+          // t.timerEffectClass = 'scale2';
+          // setTimeout(() => {t.timerEffectClass = 'timer-effect';});
 
-          if(t.timer > 109) t.timerColor = '#f55222'
-          else if(t.timer > 59) t.timerColor = '#f5e67e';
+          if(t.timer > 109){
+            t.timerColor = '#f55222';
+            t.timerEffectClass = 'scale1_2';
+            setTimeout(() => {t.timerEffectClass = 'timer-effect';}, 100);
+          }
+          else if(t.timer > 59){
+            t.timerColor = '#f5e67e';
+          }
 
           if(t.timer == 120){
               clearInterval(t.setInterval);
