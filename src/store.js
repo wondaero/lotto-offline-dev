@@ -11,6 +11,7 @@ export const store = new Vuex.Store({
         popup: {
           isOpen: false,
           name: '',
+          msg: '',
         },
         cookie: { //위치 변경 예정
           get: function (name) {
@@ -45,12 +46,21 @@ export const store = new Vuex.Store({
             state.isMobile = false;
           }
         },
-        test(state) {
-          alert(state);
+        test(state, option) {
+          console.log(option);
+        },
+
+        alert(state, msg) {
+          state.popup.isOpen = true;
+          alert(msg);
+        },
+        
+        confirm(state, opt) {
+          state.popup.isOpen = true;
+          if(!opt.view) state.popup.name = '';
         }
     },
 
     ref: {
-
     },
 });

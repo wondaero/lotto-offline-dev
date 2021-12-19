@@ -34,8 +34,6 @@
                   <div>
                     <div class="mg-b10 btns flex j-content-sb a-items-c">
                       <span class="inline-block">
-                        <!-- <span class="inline-block w80 h18 relative radius50 overflow-hidden bg-eee"
-                        v-if="isShowNumberBoard"> -->
                         <span class="inline-block w80 h18 relative radius50 bg-eee overflow-hidden" style="box-shadow:0 1px 0 #ccc;" v-if="isShowNumberBoard">
                           <span class="inline-block bg-blue absolute bottom0 left0 h100p radius50"
                           :style="{width: 100 - ((100 / 120) * timer) + '%', background: `linear-gradient(to bottom, #eee, ${timerColor}, #eee)`}"></span>
@@ -83,12 +81,6 @@
                 <div class="txt-c" v-if="isShowNumberBoard">
                   <button class="w70 pd10 border0 outline0 mg-r5 radius50 font12 border-eee" style="background:#fd0;" @click="submitTheNumber();"><strong>제출</strong></button>
                   <button class="w70 pd10 border0 outline0 mg-r5 radius50 font12 border-eee bg-fff" @click="initNum();"><strong>초기화</strong></button>
-                  <!-- <div class="mg-b5"></div>
-                  <select class="border0 outline0 border-eee w70 mg-r5 pd-h10 font12 radius50 v-top h35 bg-fff" v-model="setStarCnt">
-                    <option value="0">랜덤</option>
-                    <option :value="idx" v-for="idx in 5" :key="idx">&#9733;&#215;{{idx}}</option>
-                  </select>
-                  <button class="w70 pd10 border0 outline0 mg-r5 radius50 font12 border-eee bg-fff v-top" @click="initLotto();"><strong>리셋</strong></button> -->
                 </div>
               </div>
             </article>
@@ -112,6 +104,8 @@ import ball2 from '@/assets/img/balls/yellowBall.png';
 import ball3 from '@/assets/img/balls/greenBall.png';
 import ball4 from '@/assets/img/balls/blueBall.png';
 import ball5 from '@/assets/img/balls/purpleBall.png';
+
+// import { useStore } from "vuex";
 
 
 export default {
@@ -297,33 +291,6 @@ export default {
     showNumberBoard() {
         const t = this;
         t.isShowNumberBoard = !t.isShowNumberBoard;
-        t.pickedBalls = [];
-        t.isTestBtn = false;
-
-        t.timerEffectClass = 'timer-effect2';
-
-        
-        t.setInterval = setInterval(() => {
-          t.timer++;
-
-          // t.timerEffectClass = 'timer-effect';
-          // setTimeout(() => {t.timerEffectClass = 'timer-effect2';}, 100);
-
-          if(t.timer > 109){
-            t.timerColor = '#f55222';
-            t.timerEffectClass = 'timer-effect';
-            setTimeout(() => {t.timerEffectClass = 'timer-effect2';}, 100);
-          }
-          else if(t.timer > 59){
-            t.timerColor = '#f5e67e';
-          }
-
-          if(t.timer == 120){
-              clearInterval(t.setInterval);
-              t.initLotto();
-          }
-        }, 1000);
-
     },
 
     getBaseHint() {
@@ -786,9 +753,11 @@ export default {
 
     openResetPopup () {
       const t = this;
-      const parent = t.$parent;
-      parent.popup.isOpen = true;
-      parent.popup.name = 'initNum';
+      // t.$store.state.popup.isOpen = true;
+      // t.$store.state.popup.name = 'initNum';
+      t.$parent.popup.isOpen = true;
+      t.$parent.popup.name = 'initNum';
+      console.log(t.$parent);
     },
   },
 
@@ -797,13 +766,12 @@ export default {
     for(let i = 0; i < 45; i++){
       t.btnState[i + 1] = false;
     }
-    // t.getRandomNum();
-    // t.showNumberBoard();
   },
   mounted() {
       const t = this;
       t.getRandomNum();
       t.showNumberBoard();
+      t.initLotto(true);
   },
 
 }
@@ -814,6 +782,6 @@ export default {
   .btns img{opacity:0.3;}
   .btns input:checked + img{opacity:1;}
 
-  .timer-effect{opacity:1; transform:scaleX(2);}
-  .timer-effect2{opacity:1; transform:scaleX(1); transition:all .5s cubic-bezier(0.68, -0.55, 0.27, 1.55);}
+  .timer-effect{opacity:0; left:10px;}
+  .timer-effect2{opacity:1; left:0; transition:all .5s cubic-bezier(0.68, -0.55, 0.27, 1.55);}
 </style>
