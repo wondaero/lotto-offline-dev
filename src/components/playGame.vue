@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w500 mg0auto h100vh flex a-items-c j-content-c" :style="{background:'#f8f8f8 url(' + img.mainBg + ') no-repeat 50% 0'}">
+  <div class="max-w500 mg0auto h100vh flex a-items-c j-content-c overflow-hidden" :style="{background:'#f8f8f8 url(' + img.mainBg + ') no-repeat 50% 0'}">
     <div class="border-box pd10 w100p">
       <!-- <header class="flex j-content-sb pd10">
         <div class="flex a-items-c">
@@ -32,7 +32,7 @@
                 </div>
                 <div class="pd-v10 mg-b10 border-v-dashed-ddd" v-if="isShowNumberBoard">
                   <div>
-                    <div class="mg-b10 btns flex j-content-sb a-items-c">
+                    <div class="mg-b10 btns flex j-content-sb a-items-c relative z-idx1">
                       <span class="inline-block">
                         <span class="inline-block w80 h18 relative radius50 bg-eee overflow-hidden" style="box-shadow:0 1px 0 #ccc;" v-if="isShowNumberBoard">
                           <span class="inline-block bg-blue absolute bottom0 left0 h100p radius50"
@@ -68,17 +68,28 @@
                         <span class="inline-block border-box font11 color-fff relative radius50p" style="width:8vw; height:8vw; max-width:43px; max-height:43px;"
                         v-for="idx2 in 9" :key="idx2" :style="{background:`url(${img.balls[idx]}) no-repeat 50%`, backgroundSize: '100%'}" :class="{'mg-r5': idx2 != 9}">
                           <span class="vertical-m">{{((idx - 1) * 9) + idx2}}</span>
+                          <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000" data-symbol="falsecheck" :src="img.icon.icon_o"/>
+                          <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000" data-symbol="falseremove" :src="img.icon.icon_x"/>
+                          <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 op0_5" data-symbol="truecheck" :src="img.icon.icon_o"/>
+                          <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 op0_5" data-symbol="trueremove" :src="img.icon.icon_x"/>
+                          <b class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 z-idx1" @click.self="pickTheBall($event)"></b>
+                        </span>
+                      </div>
+                      <!-- <div :class="{'mg-b5': idx != 5}" v-for="idx in 5" :key="idx">
+                        <span class="inline-block border-box font11 color-fff relative radius50p" style="width:8vw; height:8vw; max-width:43px; max-height:43px;"
+                        v-for="idx2 in 9" :key="idx2" :style="{background:`url(${img.balls[idx]}) no-repeat 50%`, backgroundSize: '100%'}" :class="{'mg-r5': idx2 != 9}">
+                          <span class="vertical-m">{{((idx - 1) * 9) + idx2}}</span>
                           <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none scale1_3" data-symbol="falsecheck" :src="img.icon.icon_o"/>
                           <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none scale1_3" data-symbol="falseremove" :src="img.icon.icon_x"/>
                           <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none scale1_3 op0_5" data-symbol="truecheck" :src="img.icon.icon_o"/>
                           <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none scale1_3 op0_5" data-symbol="trueremove" :src="img.icon.icon_x"/>
                           <b class="absolute top0 left0 right0 bottom0 font25 txt-c color-000" @click.self="pickTheBall($event)"></b>
                         </span>
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                 </div>
-                <div class="txt-c" v-if="isShowNumberBoard">
+                <div class="txt-c relative z-idx1" v-if="isShowNumberBoard">
                   <button class="w70 pd10 border0 outline0 mg-r5 radius50 font12 border-eee" style="background:#fd0;" @click="submitTheNumber();"><strong>제출</strong></button>
                   <button class="w70 pd10 border0 outline0 mg-r5 radius50 font12 border-eee bg-fff" @click="initNum();"><strong>초기화</strong></button>
                 </div>
@@ -403,21 +414,21 @@ export default {
       let btnNum = parent.querySelector('span').innerText;
       let tmpArr = t.pickedBalls;
 
-      // parent.querySelectorAll('[data-symbol]').forEach((currentValue) => {
-      //   currentValue.classList.add('none');
-      // })
+      parent.querySelectorAll('[data-symbol]').forEach((currentValue) => {
+        currentValue.classList.remove('on');
+      })
 
-      if(t.btnState[btnNum] == (t.isTestBtn + t.btnType)){
+      if(t.btnState[btnNum] == (t.isTestBtn + t.btnType)){  //같은 상태
         if(t.btnType == 'check'){
           let elemIdx = tmpArr.indexOf(Number(btnNum));
           if (elemIdx > -1) tmpArr.splice(elemIdx, 1);
         }
 
         parent.querySelectorAll('[data-symbol]').forEach((currentValue) => {
-          currentValue.classList.add('none');
+          currentValue.classList.remove('on');
         })
 
-        parent.querySelector('[data-symbol="' + (t.isTestBtn + t.btnType) + '"]').classList.add('none');
+        parent.querySelector('[data-symbol="' + (t.isTestBtn + t.btnType) + '"]').classList.remove('on');
         t.btnState[btnNum] = false;
 
       }else{
@@ -435,11 +446,7 @@ export default {
           if (elemIdx > -1) tmpArr.splice(elemIdx, 1);
         }
 
-        parent.querySelectorAll('[data-symbol]').forEach((currentValue) => {
-          currentValue.classList.add('none');
-        })
-
-        parent.querySelector('[data-symbol="' + (t.isTestBtn + t.btnType) + '"]').classList.remove('none');
+        parent.querySelector('[data-symbol="' + (t.isTestBtn + t.btnType) + '"]').classList.add('on');
         t.btnState[btnNum] = (t.isTestBtn + t.btnType);
       }
 
@@ -784,4 +791,9 @@ export default {
 
   .timer-effect{opacity:0; left:10px;}
   .timer-effect2{opacity:1; left:0; transition:all .5s cubic-bezier(0.68, -0.55, 0.27, 1.55);}
+
+  img[data-symbol$="check"]{opacity:0; transform:scale(0); top:0;}
+  img[data-symbol$="remove"]{opacity:0; transform:scale(5); top:0;}
+  img[data-symbol^="t"].on{opacity:.5; transform:scale(1.3); top:0; transition:all .2s cubic-bezier(0.68, -0.55, 0.27, 1.55);}
+  img[data-symbol^="f"].on{opacity:1; transform:scale(1.3); top:0; transition:all .2s cubic-bezier(0.68, -0.55, 0.27, 1.55);}
 </style>

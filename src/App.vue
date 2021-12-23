@@ -52,9 +52,10 @@ export default {
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&display=swap');
+
 #app {
-  font-family: 'Nanum Pen Script', cursive;
+  font-family: 'East Sea Dokdo', cursive;
   font-weight:900;
   font-size:1.125rem;
   /* font-family: Avenir, Helvetica, Arial, sans-serif;
