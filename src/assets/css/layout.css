@@ -580,6 +580,7 @@ input[type="number"].no-btn::-webkit-inner-spin-button {
 .top-20{top:-20px;}
 .top-10{top:-10px;}
 .TOP-10{top:-10px!important;}
+.top-5{top:-5px;}
 .top-2{top:-2px;}
 .top0{top:0;}
 .top1{top:1px;}
@@ -794,12 +795,7 @@ input[type="number"].no-btn::-webkit-inner-spin-button {
 .skew-x45{transform:skewX(45deg);}
 /*****transform*****/
 
-/*****pattern*****/
-.box-shadow-pattern1{box-shadow:0 0 .5em #ddd;}
-.bg-pattern1{background:url('/resources/hospital/img/pattern1.png');}
-.hr-pattern1{border-top:2px solid #65bb00;}
-/*****pattern*****/
-
+.testtt{background:url(/img/blueBall.png)}
 /*****opacity*****/
 .op0{opacity:0;}
 .op0_2{opacity:.2;}

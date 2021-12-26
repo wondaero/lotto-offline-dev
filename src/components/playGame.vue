@@ -19,8 +19,8 @@
                     <img :src="[starCnt >= idx ? img.icon.star_on : img.icon.star_off]" v-for="(idx) in 5" :key="idx" alt="star" height="15"
                     class="relative top2" :style="{'z-index': 5 - idx, 'left': ((idx - 1) * -8) + 'px'}"/>
                   </span>
-                  <!-- <h5 class="mg0" @click="initLotto();">리셋</h5> -->
-                  <h5 class="mg0" @click="openResetPopup();">리셋</h5>
+                  <h5 class="mg0" @click="initLotto();">리셋</h5>
+                  <!-- <h5 class="mg0" @click="openResetPopup();">리셋</h5> -->
                 </div>
                 <!-- <div class="mg-b10 border-ddd radius10 pd10"  v-if="isShowNumberBoard"> -->
                 <div class="mg-b10 border-ddd radius10 pd10 overflow-y-auto" style="max-height:calc(100vh - 40vh - 195px);" v-if="isShowNumberBoard">
@@ -37,15 +37,15 @@
                         <span class="inline-block w80 h18 relative radius50 bg-eee overflow-hidden" style="box-shadow:0 1px 0 #ccc;" v-if="isShowNumberBoard">
                           <span class="inline-block bg-blue absolute bottom0 left0 h100p radius50"
                           :style="{width: 100 - ((100 / 120) * timer) + '%', background: `linear-gradient(to bottom, #eee, ${timerColor}, #eee)`}"></span>
-                          <strong class="w100p inline-block txt-c relative color-000 relative op1" :class="timerEffectClass">{{120 - timer}}</strong>
+                          <strong class="w100p inline-block txt-c relative color-000 relative op1 font-w900" :class="timerEffectClass">{{120 - timer}}</strong>
                         </span>
                       </span>
 
                       <h4 class="txt-c mg0 inline-block">{{pickedBalls.length}} / 6</h4>
                       <div>
                         <label class="mg-r10">
-                          <input type="checkbox" class="mg-r3 relative top1" v-model="isTestBtn">
-                          <span>가설</span>
+                          <input type="checkbox" class="mg-r3 top1 relative" v-model="isTestBtn">
+                          <strong class="top-2 relative font-w900">가설</strong>
                         </label>
                         <label class="mg-r10 relative top2">
                           <input type="radio" name="btn" class="none" v-model="btnType" value="check" checked>
@@ -75,23 +75,12 @@
                           <b class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 z-idx1" @click.self="pickTheBall($event)"></b>
                         </span>
                       </div>
-                      <!-- <div :class="{'mg-b5': idx != 5}" v-for="idx in 5" :key="idx">
-                        <span class="inline-block border-box font11 color-fff relative radius50p" style="width:8vw; height:8vw; max-width:43px; max-height:43px;"
-                        v-for="idx2 in 9" :key="idx2" :style="{background:`url(${img.balls[idx]}) no-repeat 50%`, backgroundSize: '100%'}" :class="{'mg-r5': idx2 != 9}">
-                          <span class="vertical-m">{{((idx - 1) * 9) + idx2}}</span>
-                          <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none scale1_3" data-symbol="falsecheck" :src="img.icon.icon_o"/>
-                          <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none scale1_3" data-symbol="falseremove" :src="img.icon.icon_x"/>
-                          <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none scale1_3 op0_5" data-symbol="truecheck" :src="img.icon.icon_o"/>
-                          <img class="absolute top0 left0 right0 bottom0 font25 txt-c color-000 none scale1_3 op0_5" data-symbol="trueremove" :src="img.icon.icon_x"/>
-                          <b class="absolute top0 left0 right0 bottom0 font25 txt-c color-000" @click.self="pickTheBall($event)"></b>
-                        </span>
-                      </div> -->
                     </div>
                   </div>
                 </div>
                 <div class="txt-c relative z-idx1" v-if="isShowNumberBoard">
                   <button class="w70 pd10 border0 outline0 mg-r5 radius50 font12 border-eee" style="background:#fd0;" @click="submitTheNumber();"><strong>제출</strong></button>
-                  <button class="w70 pd10 border0 outline0 mg-r5 radius50 font12 border-eee bg-fff" @click="initNum();"><strong>초기화</strong></button>
+                  <button class="w70 pd10 border0 outline0 mg-r5 radius50 font12 border-eee bg-fff" @click="initBoard();"><strong>초기화</strong></button>
                 </div>
               </div>
             </article>
@@ -102,6 +91,8 @@
 </template>
 
 <script>
+// import { useStore } from "vuex";
+
 //img
 import mainBg from '@/assets/img/mainBg.png';
 import icon_x from '@/assets/img/icon_x.svg';
@@ -116,17 +107,17 @@ import ball3 from '@/assets/img/balls/greenBall.png';
 import ball4 from '@/assets/img/balls/blueBall.png';
 import ball5 from '@/assets/img/balls/purpleBall.png';
 
-// import { useStore } from "vuex";
-
-
 export default {
   name: 'playGame',
-  props: {
-  },
-
+  props: {},
   data: () => {
     return {
       name: 'playGame',
+      // popup: {
+      //   isOpen: false,
+      //   name: '',
+      //   txt: ''
+      // },
       img: {
         balls: {
           1: ball1,
@@ -136,11 +127,13 @@ export default {
           5: ball5,
         },
         mainBg: mainBg,
+        // layerBg: popup_bg,
         icon: {
           icon_x: icon_x,
           icon_o: icon_o,
           star_on: star_on,
-          star_off: star_off
+          star_off: star_off,
+          // btn_x: btn_x,
         },
       },
       ballColors: ['#F15A5A', '#F0C419', '#4EBA6F', '#2D95BF', '#955BA5'],
@@ -198,16 +191,24 @@ export default {
 
   methods: {
     initLotto(boolean) {
-      if(boolean || confirm('로또 숫자를 초기화 하시겠습니까?')){
-        const t = this;
+      const t = this;
+      if(boolean) return initLotto2();
+      t.$store.commit('confirm2', {
+        name: 'initLottoPopup',
+        fnc: function(){
+          t.$store.state.ref.playGame.setStarCnt = Number(t.$store.state.ref.popup.starCnt);
+          t.$store.state.ref.playGame.initLotto(true);
+        }
+      });
+
+      function initLotto2() {
         t.btnType = 'check';
         t.pickedBalls = [];
         t.btnState = {};
         t.isTestBtn = false;
-        
   
         document.querySelectorAll('[data-symbol]').forEach((currentValue) => {
-          currentValue.classList.add('none');
+          currentValue.classList.remove('on');
         })
   
         clearInterval(t.setInterval);
@@ -225,36 +226,39 @@ export default {
           // t.timerEffectClass = 'timer-effect';
           // setTimeout(() => {t.timerEffectClass = 'timer-effect2';}, 100);
 
-          if(t.timer > 109){
-            t.timerColor = '#f55222';
-            t.timerEffectClass = 'timer-effect';
-            setTimeout(() => {t.timerEffectClass = 'timer-effect2';}, 100);
-          }
-          else if(t.timer > 59){
-            t.timerColor = '#f5e67e';
-          }
+        if(t.timer > 109){
+          t.timerColor = '#f55222';
+          t.timerEffectClass = 'timer-effect';
+          setTimeout(() => {t.timerEffectClass = 'timer-effect2';}, 100);
+        }
+        else if(t.timer > 59){
+          t.timerColor = '#f5e67e';
+        }
 
-          if(t.timer == 120){
-            clearInterval(t.setInterval);
-            return t.initLotto();
-          }
+        if(t.timer == 120){
+          clearInterval(t.setInterval);
+          return t.initLotto();
+        }
 
         }, 1000);
       }
     },
 
-    initNum() {
-      if(confirm('숫자판을 초기화 하시겠습니까?')){
-        const t = this;
-        t.btnType = 'check';
-        t.pickedBalls = [];
-        t.btnState = {};
-        t.isTestBtn = false;
+    initBoard() {
+      const t = this;
+      t.$store.commit('confirm2', {
+        txt: '숫자판을 초기화 하시겠습니까?',
+        fnc: function(){
+          t.btnType = 'check';
+          t.pickedBalls = [];
+          t.btnState = {};
+          t.isTestBtn = false;
 
-        document.querySelectorAll('[data-symbol]').forEach((currentValue) => {
-          currentValue.classList.add('none');
-        })
-      }
+          document.querySelectorAll('[data-symbol]').forEach((currentValue) => {
+            currentValue.classList.remove('on');
+          })
+        }
+      })
     },
 
     getRandomNum() {
@@ -321,7 +325,7 @@ export default {
       t.hint += '<p>';
       for(let i = 0; i < ballColors.length; i++){
         t.baseHint += `<strong class="inline-block radius50p border-box font11 color-fff mg-r3"
-        style="width:7.8vw; height:7.8vw; max-width:43px; max-height:43px; background:url(${ballColors[i]}) no-repeat 50%; background-size:100%;">
+        style="width:7.8vw; height:7.8vw; max-width:43px; max-height:43px; background:url(${ballColors[i]}) no-repeat 50% / 100%;">
           <span class="vertical-m">?<span>
         </strong>`;
       }
@@ -434,7 +438,7 @@ export default {
       }else{
         if(t.btnType == 'check'){
           if(tmpArr.length > 5 && String(t.btnState[btnNum]).indexOf('check') == -1){
-            alert('6개를 넘을 수 없습니다.');
+            t.$store.commit('alert2', {txt:'6개를 넘을 수 없습니다.'});
             return;
           }
 
@@ -463,53 +467,66 @@ export default {
     submitTheNumber() {
       const t = this;
       if(t.pickedBalls.length != 6){
-        alert('6개의 숫자를 선택해주세요.');
+        t.$store.commit('alert2', {txt: '6개의 숫자를 선택해주세요.'});
         return;
       }
 
-      let matchCnt = 0;
-      let matchBonus = false;
+      // let matchCnt = 0;
+      // let matchBonus = false;
 
-      if(confirm(t.pickedBalls + '\n위 숫자로 제출하시겠습니까?')){
-        for(let i = 0; i < t.pickedBalls.length; i++){
-          for(let j = 0; j < t.randomNumArr7.length; j++){
-            if(j == (t.randomNumArr7.length - 1)){
-              if(t.pickedBalls[i] == t.randomNumArr7[j].substr(2, t.randomNumArr7[j].length)){
-                matchBonus = true;
-              }
-            }else{
-              if(t.pickedBalls[i] == t.randomNumArr7[j]){
-                matchCnt++;
-                break;
-              }
-            }
-          }
+      t.$store.commit('confirm2', {
+        name: 'checkNumPopup',
+        fnc: function(){
+         t.$store.commit('confirm2', {
+           name: 'resultNumPopup',
+           fnc: function(){
+            t.initLotto(true);
+           }
+         });
         }
+      })
 
-        switch(matchCnt){
-          case 3:
-            alert('남은시간: ' + (120 - t.timer) + '\n' + t.randomNumArr7 + '\n5등 당첨!\n나의 숫자\n' + t.pickedBalls);
-          break;
-          case 4:
-            alert('남은시간: ' + (120 - t.timer) + '\n' + t.randomNumArr7 + '\n4등 당첨!\n나의 숫자\n' + t.pickedBalls);
-          break;
-          case 5:
-            if(matchBonus){
-              alert('남은시간: ' + (120 - t.timer) + '\n' + t.randomNumArr7 + '\n2등 당첨!\n나의 숫자\n' + t.pickedBalls);
-            }else{
-              alert('남은시간: ' + (120 - t.timer) + '\n' + t.randomNumArr7 + '\n3등 당첨!\n나의 숫자\n' + t.pickedBalls);
-            }
-          break;
-          case 6:
-            alert('남은시간: ' + (120 - t.timer) + '\n' + t.randomNumArr7 + '\n1등 당첨!\n나의 숫자\n' + t.pickedBalls);
-          break;
-          default:
-            alert('남은시간: ' + (120 - t.timer) + '\n' + t.randomNumArr7 + '\n꽝!\n나의 숫자\n' + t.pickedBalls);
-            break;
-        }
 
-        t.initLotto();
-      }
+      // if(confirm(t.pickedBalls + '\n위 숫자로 제출하시겠습니까?')){
+      //   for(let i = 0; i < t.pickedBalls.length; i++){
+      //     for(let j = 0; j < t.randomNumArr7.length; j++){
+      //       if(j == (t.randomNumArr7.length - 1)){
+      //         if(t.pickedBalls[i] == t.randomNumArr7[j].substr(2, t.randomNumArr7[j].length)){
+      //           matchBonus = true;
+      //         }
+      //       }else{
+      //         if(t.pickedBalls[i] == t.randomNumArr7[j]){
+      //           matchCnt++;
+      //           break;
+      //         }
+      //       }
+      //     }
+      //   }
+
+      //   switch(matchCnt){
+      //     case 3:
+      //       alert('남은시간: ' + (120 - t.timer) + '\n' + t.randomNumArr7 + '\n5등 당첨!\n나의 숫자\n' + t.pickedBalls);
+      //     break;
+      //     case 4:
+      //       alert('남은시간: ' + (120 - t.timer) + '\n' + t.randomNumArr7 + '\n4등 당첨!\n나의 숫자\n' + t.pickedBalls);
+      //     break;
+      //     case 5:
+      //       if(matchBonus){
+      //         alert('남은시간: ' + (120 - t.timer) + '\n' + t.randomNumArr7 + '\n2등 당첨!\n나의 숫자\n' + t.pickedBalls);
+      //       }else{
+      //         alert('남은시간: ' + (120 - t.timer) + '\n' + t.randomNumArr7 + '\n3등 당첨!\n나의 숫자\n' + t.pickedBalls);
+      //       }
+      //     break;
+      //     case 6:
+      //       alert('남은시간: ' + (120 - t.timer) + '\n' + t.randomNumArr7 + '\n1등 당첨!\n나의 숫자\n' + t.pickedBalls);
+      //     break;
+      //     default:
+      //       alert('남은시간: ' + (120 - t.timer) + '\n' + t.randomNumArr7 + '\n꽝!\n나의 숫자\n' + t.pickedBalls);
+      //       break;
+      //   }
+
+      //   t.initLotto();
+      // }
     },
 
     getQuestLevel() {
@@ -757,22 +774,12 @@ export default {
 
       return confirmedNumArr;
     },
-
-    openResetPopup () {
-      const t = this;
-      // t.$store.state.popup.isOpen = true;
-      // t.$store.state.popup.name = 'initNum';
-      t.$parent.popup.isOpen = true;
-      t.$parent.popup.name = 'initNum';
-      console.log(t.$parent);
-    },
   },
 
   created() {
     const t = this;
-    for(let i = 0; i < 45; i++){
-      t.btnState[i + 1] = false;
-    }
+    t.$store.state.ref['playGame'] = t;
+    for(let i = 0; i < 45; i++) t.btnState[i + 1] = false;
   },
   mounted() {
       const t = this;
@@ -792,8 +799,9 @@ export default {
   .timer-effect{opacity:0; left:10px;}
   .timer-effect2{opacity:1; left:0; transition:all .5s cubic-bezier(0.68, -0.55, 0.27, 1.55);}
 
-  img[data-symbol$="check"]{opacity:0; transform:scale(0); top:0;}
+  img[data-symbol$="check"]{opacity:0; transform:scale(0); top:100px;}
   img[data-symbol$="remove"]{opacity:0; transform:scale(5); top:0;}
   img[data-symbol^="t"].on{opacity:.5; transform:scale(1.3); top:0; transition:all .2s cubic-bezier(0.68, -0.55, 0.27, 1.55);}
   img[data-symbol^="f"].on{opacity:1; transform:scale(1.3); top:0; transition:all .2s cubic-bezier(0.68, -0.55, 0.27, 1.55);}
 </style>
+s

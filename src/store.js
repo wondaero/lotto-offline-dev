@@ -8,11 +8,6 @@ export const store = new Vuex.Store({
     state: {
         ref: {},
         isMobile: false,
-        popup: {
-          isOpen: false,
-          name: '',
-          msg: '',
-        },
         cookie: { //위치 변경 예정
           get: function (name) {
               var nameEQ = name + "=";
@@ -34,7 +29,14 @@ export const store = new Vuex.Store({
               document.cookie = name + "=" + (value || "") + expires + "; path=/";
           }
         },
-        test: 'aaa'
+        popup: {
+          isOpen: false,
+          name: '',
+          txt: '',
+          type: '',  //alert, confirm
+          trueCallback: ''
+        },
+        test: 'test'
     },
     mutations: {
         isMobile(state) {
@@ -49,15 +51,34 @@ export const store = new Vuex.Store({
         test(state, option) {
           console.log(option);
         },
-
-        alert(state, msg) {
+        alert2(state, option){
+          this.commit('initPopup');
+          state.popup.txt = option.txt;
           state.popup.isOpen = true;
-          alert(msg);
+          state.popup.type = 'alert';
+        },
+
+        confirm2(state, option){
+          this.commit('initPopup');
+          state.popup.name = option.name;
+          if(!state.popup.name) state.popup.txt = option.txt;
+          state.popup.isOpen = true;
+          state.popup.type = 'confirm';
+          state.popup.trueCallback = option.fnc;
         },
         
-        confirm(state, opt) {
-          state.popup.isOpen = true;
-          if(!opt.view) state.popup.name = '';
+        initPopup(state){
+          state.popup.isOpen = false;
+          state.popup.name = '';
+          state.popup.txt = '';
+          state.popup.type = '';
+          state.popup.trueCallback = undefined;
+        },
+
+        btn_ok(state){
+          const fnc = state.popup.trueCallback;
+          this.commit('initPopup');
+          typeof fnc === 'function' ? fnc() : '';
         }
     },
 
