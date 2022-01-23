@@ -303,6 +303,7 @@ input[type="number"].no-btn::-webkit-inner-spin-button {
 .h30{height:30px;}
 .h35{height:35px;}
 .h40{height:40px;}
+.h42{height:42px;}
 .h44{height:44px;}
 .h45{height:45px;}
 .h46{height:46px;}
@@ -480,6 +481,7 @@ input[type="number"].no-btn::-webkit-inner-spin-button {
 .mg-b10{margin-bottom:10px;}
 .mg-b15{margin-bottom:15px;}
 .mg-b20{margin-bottom:20px;}
+.mg-b30{margin-bottom:30px;}
 .mg-b50{margin-bottom:50px;}
 .mg-b200{margin-bottom:200px;}
 

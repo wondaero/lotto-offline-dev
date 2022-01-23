@@ -52,14 +52,17 @@
           </span>
         </div>
         <div>
-          <strong class="radius50p border-box font11 color-fff mg-r3 inline-flex j-content-c a-items-c relative overflow-hidden mg-b10"
-          style="width:7.8vw; height:7.8vw; max-width:43px; max-height:43px;"
-          :style="{background: 'url(' + img.balls[6] + ') no-repeat 50% / 100%'}" v-for="(num, idx) in $store.state.ref.playGame.pickedBalls" :key="idx">
-            <strong class="absolute top0 left0 w100p h100p" :style="{background: 'url(' + img.balls[ballsColor[num - 1]] + ') no-repeat 50% / 100%'}"
-            v-if="$store.state.ref.playGame.randomNumArr7.indexOf(num) > -1"></strong>
-            <span class="relative z-idx1">{{num}}</span>
-          </strong>
-          <p class="mp0 mg-b10">로또 숫자를 초기화 하시겠습니까?</p>
+          <div class="mg-b5">
+            <span class="radius50p border-box font11 color-fff mg-r3 inline-flex j-content-c a-items-c relative overflow-hidden"
+            style="width:7.8vw; height:7.8vw; max-width:43px; max-height:43px;"
+            :style="{background: 'url(' + img.balls[6] + ') no-repeat 50% / 100%'}" v-for="(num, idx) in $store.state.ref.playGame.pickedBalls" :key="idx">
+              <span class="absolute top0 left0 w100p h100p op0" :style="{background: 'url(' + img.balls[ballsColor[num - 1]] + ') no-repeat 50% / 100%'}"></span>
+              <!-- <span class="absolute top0 left0 w100p h100p" :style="{background: 'url(' + img.balls[ballsColor[num - 1]] + ') no-repeat 50% / 100%'}"
+              v-if="$store.state.ref.playGame.randomNumArr7.indexOf(num) > -1"></span> -->
+              <strong class="relative z-idx1" data-type="pickedBall">{{num}}</strong>
+            </span>
+          </div>
+          <p class="mp0 h50"><span class="vertical-m" v-html="resultTxt"></span></p>
         </div>
       </div>
     </div>
@@ -102,6 +105,7 @@ export default {
       ballsColor: [],
       timer: 0,
       timerColor: '',
+      resultTxt: '',
     }
   },
 
@@ -123,8 +127,32 @@ export default {
     t.starCnt = playGame.setStarCnt;
     t.timer = playGame.timer;
     t.timerColor = playGame.timerColor;
+
+    if(t.$store.state.popup.name === 'resultNumPopup'){
+      let timer = 0;
+      let matchedNums = 0;
+      t.$nextTick(() => {
+        document.querySelectorAll('[data-type]').forEach((el) => {
+          if(playGame.randomNumArr7.indexOf(Number(el.innerHTML)) > -1){
+            matchedNums++;
+            setTimeout(() => {
+              el.closest('span').querySelector('span').classList.add('matched');
+            }, (500 * timer++));
+          }
+        });
+
+        if(matchedNums == 6) clearInterval(playGame.setInterval);
+        setTimeout(() => {
+          t.resultTxt = (matchedNums == 6 ? '6개 모두 맞히셨습니다!' : `6개 중 ${matchedNums}개를 맞히셨습니다.`) + '<br>로또 숫자를 초기화 하시겠습니까?';
+        }, 500 * timer);
+      });
+    }
+
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+  span.matched{opacity:1; transition:opacity 1s;}
+</style>

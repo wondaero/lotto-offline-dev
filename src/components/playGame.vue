@@ -43,7 +43,7 @@
 
                       <h4 class="txt-c mg0 inline-block">{{pickedBalls.length}} / 6</h4>
                       <div>
-                        <label class="mg-r10">
+                        <label class="mg-r15">
                           <input type="checkbox" class="mg-r3 top1 relative" v-model="isTestBtn">
                           <strong class="top-2 relative font-w900">가설</strong>
                         </label>
@@ -113,11 +113,6 @@ export default {
   data: () => {
     return {
       name: 'playGame',
-      // popup: {
-      //   isOpen: false,
-      //   name: '',
-      //   txt: ''
-      // },
       img: {
         balls: {
           1: ball1,
@@ -477,11 +472,13 @@ export default {
       t.$store.commit('confirm2', {
         name: 'checkNumPopup',
         fnc: function(){
-         t.$store.commit('confirm2', {
-           name: 'resultNumPopup',
-           fnc: function(){
-            t.initLotto(true);
-           }
+          t.$nextTick(() => {
+            t.$store.commit('confirm2', {
+              name: 'resultNumPopup',
+              fnc: function(){
+              t.initLotto(true);
+            }
+          })
          });
         }
       })
@@ -786,6 +783,9 @@ export default {
       t.getRandomNum();
       t.showNumberBoard();
       t.initLotto(true);
+      t.$nextTick(() => {
+        t.beforeMounted = !t.beforeMounted;
+      })
   },
 
 }

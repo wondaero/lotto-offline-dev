@@ -65,9 +65,9 @@ export default {
   created() {
   },
   mounted() {
-    const t = this;
-    const parent = t.$parent;
-    parent.popup.isOpen = false;
+    // const t = this;
+    // const parent = t.$parent;
+    // parent.popup.isOpen = false;
   }
 }
 </script>
